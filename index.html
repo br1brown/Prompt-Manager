@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Prompt Manger</title>
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+
+    <!-- Bootstrap and FontAwesome CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- SweetAlert2 for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Local -->
+    <link href="stile.css" rel="stylesheet">
+    <script src="EventManager.js"></script>
+    <script src="ModalManager.js"></script>
+    <script src="PromptGenerator.js"></script>
+    <script src="prompts,js"></script>
+    <script src="PromptService,js"></script>
+    <script src="UIRenderer,js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="mb-4 text-center">
+            <h1 class="header-title">Prompt Manger</h1>
+            <p class="text-muted">Crea prompt ottimizzati per i tuoi contenuti</p>
+        </div>
+
+        <!-- Textarea principale -->
+        <div class="form-group">
+            <label for="txtSource" class="form-label">
+                <i class="fas fa-edit me-2"></i>Contenuto di partenza
+            </label>
+            <textarea class="form-control" id="txtSource" rows="8"
+                placeholder="Inserisci il testo da cui partire..."></textarea>
+        </div>
+
+        <!-- Sezione bottoni -->
+        <div class="buttons-section">
+            <div id="button-container"></div>
+        </div>
+
+        <!-- Sezione risultato -->
+        <div class="form-group">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <label class="form-label mb-0">
+                    <i class="fas fa-code me-2"></i>Prompt generato
+                </label>
+                <div>
+                    <div class="form-check form-switch d-inline-block me-3">
+                        <input type="checkbox" class="form-check-input" id="toggleNewlines">
+                        <label class="form-check-label" for="toggleNewlines">Mantieni "a capo"</label>
+                    </div>
+                    <button id="copia" class="btn btn-secondary">
+                        <i class="fas fa-clone me-1"></i> Copia
+                    </button>
+                </div>
+            </div>
+            <textarea class="form-control" id="Risultato" rows="15" readonly></textarea>
+        </div>
+    </div>
+
+    <!-- Back to top button -->
+    <a id="back-to-top" href="#" class="btn btn-dark">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+    <script>
+        // Inizializzazione quando il documento è pronto
+        $(document).ready(() => {
+            new PromptGenerator();
+        });
+    </script>
+</body>
+
+</html>
