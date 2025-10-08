@@ -88,7 +88,7 @@ const config = {
 				...COMMON_WARNINGS
             ],
 
-            context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche né variazioni di tono.\n\n**Lessico vietato (case-insensitive):** non usare le seguenti parole nemmeno come sinonimi indiretti, a meno che non siano già nel testo originale:${LESSICO_VIETATO}`
+            context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.\n\n**Lessico vietato (case-insensitive):** non usare le seguenti parole nemmeno come sinonimi indiretti, a meno che non siano già nel testo originale:${LESSICO_VIETATO}`
         };
             }
         },
