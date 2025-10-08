@@ -45,9 +45,7 @@ const SocialTag = (keepNewlines, source, toneOfVoice, social, type) => {
     };
 };
 
-const COMMON_WARNINGS = [
-  "Rimanere pertinente al contenuto",
-];
+const COMMON_WARNINGS = [];
 
 const config = {
     "Social Tag": [
@@ -78,9 +76,9 @@ const config = {
             warnings: [
 				`IMPORTANTE: Il tono è ${toneofvoice}`,
                 "Mantieni chiarezza, coerenza e fluidità",
-                "Conserva riferimenti, esempi e stile retorico se presenti",
+                "Conserva riferimenti ed esempi se presenti",
                 "Non inserire commenti, spiegazioni o aggiunte",
-				"Nessun trattino (—, --, –) usato come inciso o segno di punteggiatura; consentiti solo nelle parole composte",
+				"Nessun trattino (—, --, –) usato come inciso",
 				"Usa solo paragrafi; al loro interno niente grassetti, corsivi o elenchi",
 				"Non introdurre strutture tipo 'non solo… ma anche…' se non già presenti nel testo",
 				...COMMON_WARNINGS
