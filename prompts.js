@@ -76,15 +76,13 @@ const config = {
             output: `Testo armonizzato (nient’altro)`,
 
             warnings: [
+				`IMPORTANTE: Il tono è ${toneofvoice}`,
                 "Mantieni chiarezza, coerenza e fluidità",
                 "Conserva riferimenti, esempi e stile retorico se presenti",
-                "Modifica solo punteggiatura o ordine delle frasi per migliorare la lettura",
                 "Non inserire commenti, spiegazioni o aggiunte",
 				"Nessun trattino (—, --, –) usato come inciso o segno di punteggiatura; consentiti solo nelle parole composte",
-				"Usa solo paragrafi; niente grassetti, corsivi o elenchi",
-                "Elimina ripetizioni non intenzionali",
+				"Usa solo paragrafi; al loro interno niente grassetti, corsivi o elenchi",
 				"Non introdurre strutture tipo 'non solo… ma anche…' se non già presenti nel testo",
-                `IMPORTANTE: Il tono è ${toneofvoice}`,
 				...COMMON_WARNINGS
             ],
 
