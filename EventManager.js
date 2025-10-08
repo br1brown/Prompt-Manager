@@ -6,7 +6,7 @@ class EventManager {
     constructor(promptService, modalManager) {
         this.promptService = promptService;
         this.modalManager = modalManager;
-        this.keepNewlines = false; // Assumendo che sia una variabile globale
+        this.keepNewlines = false;
     }
 
     /**
