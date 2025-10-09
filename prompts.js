@@ -155,7 +155,7 @@ Contenuto Slide 2
                         "Cerca di accorpare parole singole per migliorare la leggibilità"
                     ],
 
-                    context: `Revisione minimale dei sottotitoli, focalizzata esclusivamente sulla correzione di errori grammaticali evidenti e sulla punteggiatura. Le modifiche devono essere ridotte al minimo indispensabile, preservando completamente lo stile e il significato originale per garantire una lettura fluida e fedele.`
+                    context: `Revisione minimale dei sottotitoli autogenerati da un video, focalizzandosi esclusivamente sulla correzione di errori grammaticali e punteggiatura. Le modifiche devono essere ridotte al minimo indispensabile, preservando completamente lo stile e il significato originale per garantire una lettura fluida e fedele.`
                 };
             }
 
