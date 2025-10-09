@@ -8,31 +8,36 @@ function formattaSource(keepNewlines, sorgente = "") {
 const SocialTag = (keepNewlines, source, toneOfVoice, social, type) => {
     const platform = social ? `per ${social}` : "per le piattaforme digitali";
     const adaptation = social ? `${social}` : "delle piattaforme";
-    const commonWarnings = [
-        "Solo elementi pertinenti al contenuto",
-        "Evita elementi spam o troppo generici",
-    ];
 
-    let objectiveSuffix, returnFormat, warnings;
+    let objectiveSuffix, returnFormat, constraints, warnings;
+
     switch (type) {
         case "tag":
             objectiveSuffix = "una lista di tag separati da virgole";
             returnFormat = "tag1, tag2, tag3, tag4, ...";
-            warnings = [
+            constraints = [
                 "Massimo 500 caratteri totali",
-                "Non usare hashtag (#), solo parole chiave",
-                ...commonWarnings,
+                "Non usare hashtag (#), solo parole chiave"
+            ];
+            warnings = [
+                "Solo elementi pertinenti al contenuto",
+                "Evita elementi spam o troppo generici"
             ];
             break;
+
         case "hashtag":
             objectiveSuffix = "una lista di hashtag ottimizzati";
             returnFormat = "#hashtag1 #hashtag2 #hashtag3 ...";
-            warnings = [
+            constraints = [
                 "Da un minimo di 3 a un massimo di 15 hashtag",
-                "Includi un mix bilanciato di hashtag di nicchia, medi e popolari",
-                ...commonWarnings,
+                "Includi un mix bilanciato di hashtag di nicchia, medi e popolari"
+            ];
+            warnings = [
+                "Solo elementi pertinenti al contenuto",
+                "Evita elementi spam o troppo generici"
             ];
             break;
+
         default:
             throw new Error("Tipo non valido: scegli tra 'tag' o 'hashtag'");
     }
@@ -40,10 +45,12 @@ const SocialTag = (keepNewlines, source, toneOfVoice, social, type) => {
     return {
         objective: `Genera ${objectiveSuffix} partendo dal seguente contenuto:\n${formattaSource(keepNewlines, source)}`,
         output: returnFormat,
+        constraints,
         warnings,
         context: `Strategia di ottimizzazione avanzata ${platform}. L’obiettivo è aumentare la visibilità e il coinvolgimento, applicando le best practice ${adaptation} per migliorare il posizionamento nei feed e l’engagement organico.`
     };
 };
+
 
 const COMMON_WARNINGS = [];
 
@@ -62,30 +69,31 @@ const config = {
         {
             label: "Armonizzazione Stile",
             func: (keepNewlines, source, toneofvoice) => {
-        const formattedSource = formattaSource(keepNewlines, source);
+                const formattedSource = formattaSource(keepNewlines, source);
 
-        const LESSICO_VIETATO = `
-"Può", "potrebbe", "solo", "molto", "davvero", "letteralmente", "effettivamente", "certamente", "probabilmente", "fondamentalmente", "approfondire", "intraprendere", "illuminante", "stimato", "fare luce", "creare", "immaginare", "regno", "rivoluzionario", "sbloccare", "scoprire", "alle stelle", "abisso", "non sei solo", "in un mondo dove", "rivoluzionare", "dirompente", "utilizzare", "tuffarsi", "arazzo", "illuminare", "svelare", "cruciale", "intricato", "chiarire", "quindi", "inoltre", "tuttavia", "sfruttare", "entusiasmante", "innovativo", "all'avanguardia", "notevole", "resta da vedere", "scorcio", "navigare", "paesaggio", "crudo", "testimonianza", "riassumendo", "in sintesi", "potenziare", "vertiginoso", "aprire", "potente", "richieste", "in continua evoluzione"
-`;
+                const LESSICO_VIETATO = "può, potrebbe, solo, molto, davvero, letteralmente, effettivamente, certamente, probabilmente, fondamentalmente, approfondire, intraprendere, illuminante, stimato, fare luce, creare, immaginare, regno, rivoluzionario, sbloccare, scoprire, alle stelle, abisso, non sei solo, in un mondo dove, rivoluzionare, dirompente, utilizzare, tuffarsi, arazzo, illuminare, svelare, cruciale, intricato, chiarire, quindi, inoltre, tuttavia, sfruttare, entusiasmante, innovativo, all\'avanguardia, notevole, resta da vedere, scorcio, navigare, paesaggio, crudo, testimonianza, riassumendo, in sintesi, potenziare, vertiginoso, aprire, potente, richieste, in continua evoluzione";
 
-        return {
-            objective: `Armonizza il seguente testo eliminando ripetizioni semantiche e rendendolo più scorrevole, senza alterarne il significato:\n${formattedSource}`,
+                return {
+                    objective: `Armonizza il seguente testo eliminando ripetizioni semantiche e rendendolo più scorrevole, senza alterarne il significato: ${formattedSource}`,
 
-            output: `Testo armonizzato (nient’altro)`,
+                    output: `Testo armonizzato (nient’altro)`,
 
-            warnings: [
-				`IMPORTANTE: Il tono è ${toneofvoice}`,
-                "Mantieni chiarezza, coerenza e fluidità",
-                "Conserva riferimenti ed esempi se presenti",
-                "Non inserire commenti, spiegazioni o aggiunte",
-				"Nessun trattino (—, --, –) usato come inciso",
-				"Usa solo paragrafi; al loro interno niente grassetti, corsivi o elenchi",
-				"Non introdurre strutture tipo 'non solo… ma anche…' se non già presenti nel testo",
-				...COMMON_WARNINGS
-            ],
+                    constraints: [
+                        `IMPORTANTE: Il tono è ${toneofvoice}`,
+                        "Conserva riferimenti ed esempi se presenti",
+                        "Mantieni il significato originale",
+                        "Ottimizzare solo la struttura senza alterare il messaggio",
+                        "Nessun trattino (—, --, –) usato come inciso"
+                    ],
 
-            context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.\n\n**Lessico vietato (case-insensitive):** non usare le seguenti parole nemmeno come sinonimi indiretti, a meno che non siano già nel testo originale:${LESSICO_VIETATO}`
-        };
+                    warnings: [
+                        "Usa solo paragrafi; al loro interno niente grassetti, corsivi o elenchi",
+                        "Non usare il Lessico vietato nemmeno come sinonimi indiretti, a meno che non siano già nel testo originale",
+                        "Non introdurre strutture tipo 'non solo… ma anche…' se non già presenti nel testo"
+                    ],
+
+                    context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.\n\n**Lessico vietato (case-insensitive):** ${LESSICO_VIETATO}`
+                };
             }
         },
         {
@@ -93,6 +101,7 @@ const config = {
             func: (keepNewlines, source, toneofvoice) => {
                 return {
                     objective: `Crea un testo coinvolgente per carosello Instagram basato su: ${formattaSource(keepNewlines, source)}\nIl testo deve essere informativo, coinvolgente e strutturato per mantenere l'attenzione`,
+
                     output: `
 [TITOLO PRINCIPALE]
 ANTICIPAZIONE
@@ -105,14 +114,26 @@ Contenuto Slide 2
 
 ...e così via per tutte le slide necessarie
 `,
-                    warnings: [
+
+                    constraints: [
                         `Tono e linguaggio ${toneofvoice}`,
-                        "Uso moderato delle emoji",
-						...COMMON_WARNINGS
+                        "Una slide deve contenere un solo concetto chiave",
+                        "Evita contenuti ripetitivi tra le slide",
+                        "Il carosello deve iniziare con un titolo forte e un'anticipazione",
+                        "Non superare le 10 slide"
                     ],
-                    context: `Struttura di un carosello Instagram ottimizzato per engagement. Deve mantenere una progressione logica, alternando informazione e intrattenimento`,
+
+                    warnings: [
+                        "Ogni slide deve essere comprensibile anche se letta singolarmente",
+                        "Uso moderato delle emoji",
+                        "Mantieni uno stile coerente tra tutte le slide",
+                        "Alterna ritmo tra informazione e intrattenimento per mantenere alta l’attenzione"
+                    ],
+
+                    context: `Struttura di un carosello Instagram ottimizzato per engagement. Deve mantenere una progressione logica, alternando informazione e intrattenimento. L’obiettivo è massimizzare la retention slide dopo slide.`
                 };
             }
+
         }
     ],
     "Revisione": [
@@ -120,39 +141,51 @@ Contenuto Slide 2
             label: "Correzione Sottotitoli",
             func: (keepNewlines, source, toneofvoice) => {
                 return {
-                    objective: `Correggi esclusivamente gli errori grammaticali dovuti a trascrizioni errate e i problemi di punteggiatura nel seguente testo: ${formattaSource(keepNewlines, source)}\nIl testo deve rimanere il più possibile fedele all'originale.`,
-                    warnings: [
+                    objective: `Correggi esclusivamente gli errori grammaticali dovuti a trascrizioni errate e i problemi di punteggiatura nel seguente testo: ${formattaSource(keepNewlines, source)}`,
+
+                    constraints: [
+                        "Il testo deve rimanere fedele all'originale",
                         "Non cambiare lo stile, il tono o la struttura delle frasi",
                         "Non riscrivere il testo: intervieni solo in presenza di errori evidenti",
-                        "Cerca di accorpare parole singole per migliorare la leggibilità",
                         "Non modificare i riferimenti temporali (se presenti)",
-                        "Ottimizza solo la punteggiatura per migliorare la comprensione, senza alterare il contenuto",
-						...COMMON_WARNINGS
+                        "Ottimizza solo la punteggiatura per migliorare la comprensione, senza alterare il contenuto"
                     ],
+
+                    warnings: [
+                        "Cerca di accorpare parole singole per migliorare la leggibilità"
+                    ],
+
                     context: `Revisione minimale dei sottotitoli, focalizzata esclusivamente sulla correzione di errori grammaticali evidenti e sulla punteggiatura. Le modifiche devono essere ridotte al minimo indispensabile, preservando completamente lo stile e il significato originale per garantire una lettura fluida e fedele.`
                 };
             }
+
         },
         {
             label: "Controllo Accuratezza",
             func: (keepNewlines, source) => {
                 return {
-                    objective: `Verifica, anche tramite internet, l'accuratezza delle informazioni nel seguente testo: ${formattaSource(keepNewlines, source)}\nMostra solo gli errori e le inesattezze da correggere solo supportate da fonti affidabili`,
+                    objective: `Verifica tramite internet l'accuratezza delle informazioni nel seguente testo: ${formattaSource(keepNewlines, source)}\nMostra solo gli errori e le inesattezze da correggere solo supportate da fonti affidabili`,
+
                     output: `---
 Testo originale
 [Spiegazione dell'errore], Fonti
 Testo corretto proposto
 ---`,
-                    warnings: [
+
+                    constraints: [
                         "Verifica solo fatti oggettivi",
                         "Usa fonti autorevoli e fornisci link",
-                        "Ignora le informazioni corrette",
-                        "Mantieni neutralità nelle correzioni",
-						...COMMON_WARNINGS
+                        "Ignora le informazioni corrette"
                     ],
-                    context: `Analisi e correzione di eventuali errori fattuali. L'obiettivo è garantire informazioni accurate, fornendo riferimenti affidabili senza alterare il significato originale`,
+
+                    warnings: [
+                        "Mantieni neutralità nelle correzioni"
+                    ],
+
+                    context: `Analisi e correzione di eventuali errori fattuali. L'obiettivo è garantire informazioni accurate, fornendo riferimenti affidabili senza alterare il significato originale.`
                 };
             }
+
         }
     ],
 };

@@ -30,16 +30,27 @@ class PromptService {
      * Formatta il risultato del prompt
      */
     formatPromptResult(task) {
+        if (!task) return "Nessun task fornito.";
+
+        var json = JSON.stringify({
+            objective: task.objective,
+            output: task.output,
+            constraints: task.constraints || [],
+            warnings: task.warnings || [],
+            context: task.context
+        }, null, 2);
+
         const parts = [];
 
         if (task.objective) parts.push(task.objective);
         if (task.output) parts.push(`Formato output richiesto:\n${task.output}`);
-        if (Array.isArray(task.warnings) && task.warnings.length > 0) {
-            parts.push(`Warnings:\n- ${task.warnings.join("\n- ")}`);
-        }
+        if (Array.isArray(task.constraints) && task.constraints.length > 0)
+            parts.push(`Vincoli:\n- ${task.constraints.join("\n- ")}`);
+        if (Array.isArray(task.warnings) && task.warnings.length > 0)
+            parts.push(`Avvertenze:\n- ${task.warnings.join("\n- ")}`);
         if (task.context) parts.push(`Contesto:\n${task.context}`);
 
-        return parts.join("\n");
+        return parts.length > 0 ? parts.join("\n\n") : "Nessun dato disponibile per questo task.";
     }
 
     /**
