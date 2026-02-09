@@ -1,4 +1,3 @@
-
 /**
  * Classe per la gestione degli eventi dell'interfaccia
  */
@@ -28,7 +27,6 @@ class EventManager {
         $('#Risultato').on('click', function () { $(this).select(); });
     }
 
-
     /**
      * Eventi per lo scroll
      */
@@ -36,7 +34,6 @@ class EventManager {
         $(window).on('scroll', () => this.handleScroll());
         $('#back-to-top').on('click', (e) => this.scrollToTop(e));
     }
-
 
     /**
      * Gestisce il click sui bottoni principali
@@ -50,7 +47,12 @@ class EventManager {
 
         const button = $(event.currentTarget);
         const type = button.data("type");
+        const index = button.data("index");
 
+        // Ottieni la configurazione del bottone
+        const buttonConfig = config[type][index];
+
+        // Se è "Revisione", attiva automaticamente "Mantieni a capo"
         if (type === "Revisione") {
             $('#toggleNewlines').prop("checked", true);
             this.keepNewlines = true;
@@ -64,11 +66,11 @@ class EventManager {
 
         const generateCallback = () => this.promptService.generatePrompt(button, this.keepNewlines, scrollToResult);
 
-        if (type === "Produzione Testi") {
+        // Se il bottone richiede modale (Personalizzata), mostrala
+        if (buttonConfig.needsModal) {
             this.modalManager.showToneModal(button, generateCallback);
-        } else if (type === "Social Tag") {
-            this.modalManager.showSocialSelectModal(button, generateCallback);
         } else {
+            // Altrimenti genera direttamente (bottoni con tono fisso o Revisione)
             generateCallback();
         }
     }
@@ -84,15 +86,23 @@ class EventManager {
         }
 
         navigator.clipboard.writeText(text).then(() => {
+            // Rileva se siamo su mobile
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
             Swal.fire({
                 title: "Testo copiato!",
                 icon: "success",
                 showCloseButton: false,
                 showCancelButton: false,
                 showConfirmButton: false,
-                html: linkAI.map(link =>
-                    `<a href="${link.url}" target="_blank" class="m-1 btn btn-sm btn-dark">${link.nome}</a>`
-                ).join('')
+                html: linkAI.map(link => {
+                    // Se siamo su mobile e c'è un URL app, usa quello, altrimenti usa il web
+                    const url = (isMobile && link.app) ? link.app : link.url;
+                    // Se non c'è app su mobile e link.app è esplicitamente null, salta questo link
+                    if (isMobile && link.app === null) return '';
+
+                    return `<a href="${url}" target="_blank" class="m-1 btn btn-sm btn-dark">${link.nome}</a>`;
+                }).filter(Boolean).join('')
             });
         }).catch(() => {
             this.modalManager.showError("Errore", "Impossibile copiare il testo");
@@ -105,9 +115,9 @@ class EventManager {
     handleScroll() {
         const backToTop = $('#back-to-top');
         if ($(window).scrollTop() > 50) {
-            backToTop.fadeIn();
+            backToTop.addClass('show');
         } else {
-            backToTop.fadeOut();
+            backToTop.removeClass('show');
         }
     }
 

@@ -1,11 +1,10 @@
 /**
-* Classe per la gestione della generazione dei prompt
-*/
+ * Classe per la gestione della generazione dei prompt
+ */
 class PromptService {
     constructor() {
         this.lastClickedButton = null;
         this.selectedTone = null;
-        this.lastSocial = null;
     }
 
     /**
@@ -16,9 +15,16 @@ class PromptService {
         if (!source) return;
 
         this.lastClickedButton = button;
-        const tone = this.selectedTone || "invariato";
 
-        const task = config[button.data("type")][button.data("index")].func(keepNewlines, source, tone, this.lastSocial);
+        const type = button.data("type");
+        const index = button.data("index");
+        const buttonConfig = config[type][index];
+
+        // Se il bottone ha un tono embedded, usalo
+        // Altrimenti usa il tono selezionato dalla modale (per "Personalizzata")
+        const tone = buttonConfig.tone || this.selectedTone || "invariato";
+
+        const task = buttonConfig.func(keepNewlines, source, tone);
         const result = this.formatPromptResult(task);
 
         $("#Risultato").val(result);
@@ -31,14 +37,6 @@ class PromptService {
      */
     formatPromptResult(task) {
         if (!task) return "Nessun task fornito.";
-
-        var json = JSON.stringify({
-            objective: task.objective,
-            output: task.output,
-            constraints: task.constraints || [],
-            warnings: task.warnings || [],
-            context: task.context
-        }, null, 2);
 
         const parts = [];
 
@@ -57,23 +55,21 @@ class PromptService {
      * Rigenera automaticamente il prompt quando il testo sorgente cambia
      */
     autoRegenerate(keepNewlines) {
-        debugger
         if (this.lastClickedButton) {
             this.generatePrompt(this.lastClickedButton, keepNewlines);
         }
     }
 
     /**
-     * Getter e setter per i parametri
+     * Setter per il tono selezionato (usato dalla modale "Personalizzata")
      */
     setSelectedTone(tone) {
         this.selectedTone = tone;
     }
 
-    setLastSocial(social) {
-        this.lastSocial = social;
-    }
-
+    /**
+     * Getter per l'ultimo bottone cliccato
+     */
     getLastClickedButton() {
         return this.lastClickedButton;
     }

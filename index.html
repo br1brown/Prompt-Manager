@@ -3,79 +3,149 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>Prompt Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+    
+    <!-- SEO & Meta -->
+    <title>Prompt Manager - Crea prompt AI ottimizzati</title>
+    <meta name="description" content="Strumento professionale per creare e gestire prompt ottimizzati per AI. Armonizza testi, correggi sottotitoli e genera contenuti con diversi toni di voce.">
+    <meta name="keywords" content="prompt manager, AI, prompt engineering, generazione testi, Claude, ChatGPT">
+    <meta name="author" content="Prompt Manager">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Prompt Manager - Crea prompt AI ottimizzati">
+    <meta property="og:description" content="Strumento professionale per creare prompt ottimizzati per intelligenze artificiali">
+    <meta property="og:url" content="https://tuodominio.com">
+    
+    <!-- Theme & Icons -->
     <link rel="icon" type="image/svg+xml" href="icon.svg">
-
-    <!-- Bootstrap and FontAwesome CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- SweetAlert2 for notifications -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Local -->
+    <meta name="theme-color" content="#2a51d0">
+    <meta name="color-scheme" content="light dark">
+    
+    <!-- Preconnect per performance -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous">
     <link href="stile.css" rel="stylesheet">
-	
-	
-	<script src="prompts.js"></script>
-	<script src="PromptService.js"></script>
-	<script src="UIRenderer.js"></script>
-	<script src="ModalManager.js"></script>
-	<script src="EventManager.js"></script>
-	<script src="PromptGenerator.js"></script>
-
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+            integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+    
+    <!-- Application Scripts -->
+    <script src="prompts.js"></script>
+    <script src="PromptService.js"></script>
+    <script src="UIRenderer.js"></script>
+    <script src="ModalManager.js"></script>
+    <script src="EventManager.js"></script>
+    <script src="PromptGenerator.js"></script>
 </head>
 
 <body>
-    <div class="container">
+    <!-- Skip to main content per accessibilità -->
+    <a href="#main-content" class="visually-hidden-focusable skip-link">Vai al contenuto principale</a>
+    
+    <div class="container" role="main">
         <!-- Header -->
-        <div class="mb-4 text-center">
-            <h1 class="header-title">Prompt Manager</h1>
-            <p class="text-muted">Crea prompt ottimizzati per i tuoi contenuti</p>
-        </div>
+        <header class="app-header mb-4 text-center">
+            <h1 class="header-title">
+                <i class="fas fa-magic me-2" aria-hidden="true"></i>
+                Prompt Manager
+            </h1>
+            <p class="text-muted mb-0">Crea prompt ottimizzati per i tuoi contenuti</p>
+        </header>
 
-        <!-- Textarea principale -->
-        <div class="form-group">
-            <label for="txtSource" class="form-label">
-                <i class="fas fa-edit me-2"></i>Contenuto di partenza
-            </label>
-            <textarea class="form-control" id="txtSource" rows="8"
-                placeholder="Inserisci il testo da cui partire..."></textarea>
-        </div>
-
-        <!-- Sezione bottoni -->
-        <div class="buttons-section">
-            <div id="button-container"></div>
-        </div>
-
-        <!-- Sezione risultato -->
-        <div class="form-group">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <label class="form-label mb-0">
-                    <i class="fas fa-code me-2"></i>Prompt generato
-                </label>
-                <div>
-                    <div class="form-check form-switch d-inline-block me-3">
-                        <input type="checkbox" class="form-check-input" id="toggleNewlines">
-                        <label class="form-check-label" for="toggleNewlines">Mantieni "a capo"</label>
-                    </div>
-                    <button id="copia" class="btn btn-secondary">
-                        <i class="fas fa-clone me-1"></i> Copia
-                    </button>
+        <main id="main-content">
+            <!-- Textarea principale -->
+            <section class="form-section" aria-labelledby="source-label">
+                <div class="form-group">
+                    <label for="txtSource" id="source-label" class="form-label">
+                        <i class="fas fa-edit me-2" aria-hidden="true"></i>
+                        Contenuto di partenza
+                    </label>
+                    <textarea 
+                        class="form-control" 
+                        id="txtSource" 
+                        rows="8"
+                        placeholder="Inserisci il testo da cui partire..."
+                        aria-describedby="source-help"
+                        spellcheck="true"></textarea>
+                    <small id="source-help" class="form-text text-muted visually-hidden">
+                        Inserisci il testo che vuoi elaborare o armonizzare
+                    </small>
                 </div>
-            </div>
-            <textarea class="form-control" id="Risultato" rows="15" readonly></textarea>
-        </div>
+            </section>
+
+            <!-- Sezione bottoni -->
+            <section class="buttons-section" aria-labelledby="actions-label">
+                <h2 id="actions-label" class="visually-hidden">Azioni disponibili</h2>
+                <div id="button-container" role="group"></div>
+            </section>
+
+            <!-- Sezione risultato -->
+            <section class="result-section" aria-labelledby="result-label">
+                <div class="form-group">
+                    <div class="result-header">
+                        <label for="Risultato" id="result-label" class="form-label mb-0">
+                            <i class="fas fa-code me-2" aria-hidden="true"></i>
+                            Prompt generato
+                        </label>
+                        <div class="result-controls">
+                            <div class="form-check form-switch">
+                                <input 
+                                    type="checkbox" 
+                                    class="form-check-input" 
+                                    id="toggleNewlines"
+                                    role="switch"
+                                    aria-label="Mantieni interruzioni di riga nel testo">
+                                <label class="form-check-label" for="toggleNewlines">
+                                    <span class="d-none d-md-inline">Mantieni "a capo"</span>
+                                    <span class="d-md-none">A capo</span>
+                                </label>
+                            </div>
+                            <button 
+                                id="copia" 
+                                class="btn btn-secondary"
+                                aria-label="Copia il prompt negli appunti">
+                                <i class="fas fa-clone me-1" aria-hidden="true"></i>
+                                <span class="d-none d-sm-inline">Copia</span>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea 
+                        class="form-control" 
+                        id="Risultato" 
+                        rows="15" 
+                        readonly
+                        aria-live="polite"
+                        aria-atomic="true"
+                        placeholder="Il prompt generato apparirà qui..."></textarea>
+                </div>
+            </section>
+        </main>
     </div>
 
     <!-- Back to top button -->
-    <a id="back-to-top" href="#" class="btn btn-dark">
-        <i class="fas fa-chevron-up"></i>
+    <a 
+        id="back-to-top" 
+        href="#" 
+        class="btn btn-dark" 
+        aria-label="Torna all'inizio della pagina"
+        role="button">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
     </a>
+
+    <!-- Footer (opzionale) -->
+    <footer class="app-footer text-center text-muted py-3 mt-5">
+        <small>&copy; 2026 Prompt Manager - Ottimizza i tuoi prompt AI</small>
+    </footer>
 
     <script>
         // Inizializzazione quando il documento è pronto

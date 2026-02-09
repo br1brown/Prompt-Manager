@@ -1,11 +1,10 @@
-
 /**
  * Classe per la gestione delle modali
  */
 class ModalManager {
     constructor(promptService) {
         this.promptService = promptService;
-        this.storageKey = 'toneUsageStats'; // Assumendo che sia definito altrove
+        this.storageKey = 'toneUsageStats';
     }
 
     /**
@@ -104,55 +103,6 @@ class ModalManager {
 
         $('#customTone').on('input', () => {
             $('.profile-card').removeClass('selected border-primary border-2');
-        });
-    }
-
-    /**
-     * Mostra la modal per la selezione del social
-     */
-    showSocialSelectModal(button, callback) {
-        Swal.fire({
-            title: 'Seleziona un social',
-            html: this.buildSocialSelectModalHtml(),
-            width: 600,
-            showCancelButton: true,
-            showConfirmButton: false,
-            cancelButtonText: 'Annulla',
-            customClass: {
-                cancelButton: 'btn btn-secondary'
-            },
-            didOpen: () => this.setupSocialSelectModalEvents(),
-        }).then(result => {
-            if (result.isConfirmed) {
-                this.promptService.setLastSocial(Swal.getPopup().getAttribute("data-selected-social"));
-                callback();
-            }
-        });
-    }
-
-    /**
-     * Costruisce l'HTML per la modal di selezione social
-     */
-    buildSocialSelectModalHtml() {
-        const socialOptions = ['TikTok', 'Youtube', 'Instagram', 'Twitter', 'LinkedIn'];
-
-        const buttons = socialOptions.map(social => `
-            <button class="btn btn-primary btn-sm social-btn m-2" data-social="${social}">
-                <i class="fab fa-${social.toLowerCase()} me-2"></i>${social}
-            </button>
-        `).join('');
-
-        return `<div class="modal-body d-flex flex-wrap justify-content-center">${buttons}</div>`;
-    }
-
-    /**
-     * Configura gli eventi per la modal di selezione social
-     */
-    setupSocialSelectModalEvents() {
-        $('.social-btn').on('click', function () {
-            const selectedSocial = $(this).data('social');
-            Swal.clickConfirm();
-            Swal.getPopup().setAttribute('data-selected-social', selectedSocial);
         });
     }
 
