@@ -2,7 +2,7 @@
 Un'applicazione web per la generazione di prompt ottimizzati per contenuti AI, con interfaccia intuitiva e funzionalità avanzate di personalizzazione.
 
 ## 🚀 Demo
-Prova subito l'applicazione: **[Prompt Manager Live](https://tuonome.github.io/prompt-manager)**
+Prova subito l'applicazione: **[Prompt Manager Live](https://br1brown.github.io/Prompt-Manager/)**
 
 ## 🚀 Caratteristiche
 - **Generazione automatica di prompt** ottimizzati per diversi tipi di contenuto
