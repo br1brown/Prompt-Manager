@@ -747,12 +747,29 @@ textarea {
     color: var(--text-secondary);
     flex-wrap: wrap;
     text-align: center;
+    transition: background-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+/* Quando è attiva, un "chip" di sfondo dietro l'interruttore evita che le
+   etichette (testo arcobaleno) si mimetizzino con lo sfondo animato */
+body.meme-mode .meme-mode-bar {
+    background-color: rgba(255, 255, 255, .6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 999px;
+    padding: 0.5rem 1.25rem;
+    box-shadow: 0 4px 20px rgba(120, 115, 245, .25);
 }
 
 .meme-mode-label--on {
+    /* white-space: nowrap evita che il testo si spezzi su più righe: con
+       background-clip: text, Chrome non ridipinge il gradiente sulla riga
+       "a capo" e quel pezzo di testo sparisce invece di andare a capo */
+    white-space: nowrap;
     background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8);
     -webkit-background-clip: text;
     background-clip: text;
+    -webkit-text-fill-color: transparent;
     color: transparent;
 }
 
@@ -931,6 +948,10 @@ body.meme-mode .header-title {
     color: transparent;
     animation: memeTextShine 3s linear infinite, memeWiggle 2.4s ease-in-out infinite;
     display: inline-block;
+    /* Contorno bianco "da sticker" così il testo resta leggibile qualunque
+       colore stia passando nello sfondo animato dietro di lui */
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff,
+        0 0 25px rgba(255, 255, 255, .8);
 }
 
 body.meme-mode .app-header p.text-muted {
