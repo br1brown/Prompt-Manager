@@ -20,6 +20,20 @@ export class EventManager {
         $(document).on('click', ".bottone", (e) => this.handleButtonClick(e));
         this.bindScrollEvents();
         $('#toggleNewlines').on('change', (e) => this.toggleNewlines(e));
+        $('#togglePreview').on('click', () => this.togglePreview());
+    }
+
+    /**
+     * Espande/comprime l'anteprima del prompt (collassata di default)
+     */
+    togglePreview() {
+        const preview = $('#risultatoPreview');
+        const btn = $('#togglePreview');
+        const isExpanded = preview.hasClass('expanded');
+
+        preview.toggleClass('expanded', !isExpanded);
+        btn.attr('aria-expanded', String(!isExpanded));
+        btn.text(isExpanded ? 'Vedi il prompt completo' : 'Comprimi');
     }
 
     /**

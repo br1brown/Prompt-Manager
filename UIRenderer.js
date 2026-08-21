@@ -48,12 +48,15 @@ export class UIRenderer {
      */
     renderCategoryButtons() {
         const buttonContainer = $('#button-container').empty();
+        // Lo spazio tra i bottoni è dato solo dal "gap" della grid (stile.css):
+        // niente margini sui singoli bottoni, altrimenti si sommano al gap
+        // e la spaziatura diventa irregolare, soprattutto ai bordi.
         const buttonRow = $('<div class="d-flex flex-wrap"></div>');
 
         config[this.activeCategory].forEach((item, index) => {
             const isDefault = item.label === DEFAULT_LABEL;
             const button = $(`
-                <button class="btn ${isDefault ? 'btn-primary' : 'btn-dark'} bottone m-2" type="button"
+                <button class="btn ${isDefault ? 'btn-primary' : 'btn-dark'} bottone" type="button"
                         data-label="${item.label}"
                         data-type="${this.activeCategory}"
                         data-index="${index}">

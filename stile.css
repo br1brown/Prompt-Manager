@@ -379,13 +379,59 @@ textarea {
 }
 
 /* Anteprima del prompt generato, divisa in sezioni etichettate invece di un
-   unico blocco di testo (legge di Miller: informazione raggruppata in chunk) */
+   unico blocco di testo (legge di Miller: informazione raggruppata in chunk).
+   Collassata di default: si vedono solo le prime righe, che sfumano nello
+   sfondo, per non mostrare a tutti dettagli (vincoli, lessico vietato...)
+   utili solo a chi li cerca esplicitamente (legge di Tesler) */
 .risultato-preview {
     background-color: var(--card-bg);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
     padding: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: 0;
+    position: relative;
+    max-height: 9rem;
+    overflow: hidden;
+    transition: max-height var(--transition-slow);
+}
+
+.risultato-preview::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3.5rem;
+    background: linear-gradient(to bottom, transparent, var(--card-bg) 85%);
+    pointer-events: none;
+}
+
+.risultato-preview.expanded {
+    max-height: 3000px;
+}
+
+.risultato-preview.is-empty,
+.risultato-preview.expanded {
+    padding-bottom: var(--spacing-md);
+}
+
+.risultato-preview.is-empty::after,
+.risultato-preview.expanded::after {
+    content: none;
+}
+
+.preview-toggle {
+    display: block;
+    margin: 0 auto var(--spacing-sm);
+    padding: 0.25rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600;
+    color: var(--primary-color);
+    background: none;
+}
+
+.preview-toggle:hover {
+    text-decoration: underline;
 }
 
 .risultato-empty {

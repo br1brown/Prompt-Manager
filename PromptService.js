@@ -41,10 +41,25 @@ export class PromptService {
      * di testo, per ridurre il carico di lettura (legge di Miller).
      * Il testo copiato da #Risultato resta invariato: qui cambia solo
      * la presentazione visiva.
+     *
+     * Di default l'anteprima è collassata (poche righe che sfumano nello
+     * sfondo, vedi CSS) e va espansa con "Vedi il prompt completo": la
+     * maggior parte di chi usa lo strumento genera e copia senza aver
+     * bisogno di leggere vincoli/avvertenze per intero (legge di Tesler:
+     * quel dettaglio resta disponibile ma non è imposto a chi non lo vuole).
      */
     renderPreview(task) {
         const preview = $('#risultatoPreview').empty();
-        if (!task) return;
+        const toggleBtn = $('#togglePreview');
+
+        if (!task) {
+            preview.addClass('is-empty').removeClass('expanded');
+            toggleBtn.attr('hidden', true);
+            return;
+        }
+
+        preview.removeClass('is-empty expanded');
+        toggleBtn.prop('hidden', false).attr('aria-expanded', 'false').text('Vedi il prompt completo');
 
         const escapeHtml = (str) => $('<div>').text(str).html();
 
