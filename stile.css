@@ -230,7 +230,6 @@ textarea {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    white-space: nowrap;
     /* Target minimo consigliato per il tocco (Apple HIG / Material): legge di Fitts */
     min-height: 44px;
     min-width: 44px;
@@ -348,10 +347,9 @@ textarea {
 .bottone {
     width: 100%;
     justify-content: center;
-    /* Le etichette lunghe (es. "alla 'Occhio al mondo'") in una grid a
-       colonne strette altrimenti sforano oltre il padding: qui possono
-       andare su due righe invece di uscire dal bottone */
-    white-space: normal;
+    /* min-width: 0 evita che le etichette lunghe (es. "alla 'Occhio al
+       mondo'") forzino la colonna della grid oltre lo spazio disponibile:
+       ora possono andare su due righe invece di uscire dal bottone */
     text-align: center;
     min-width: 0;
 }
