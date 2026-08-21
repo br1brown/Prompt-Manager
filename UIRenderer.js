@@ -55,7 +55,11 @@ export class UIRenderer {
 
         config[this.activeCategory].forEach((item, index) => {
             const isDefault = item.label === DEFAULT_LABEL;
-            const col = $('<div class="col"></div>');
+            // d-flex sulla colonna fa sì che il bottone si estenda per
+            // tutta l'altezza della riga (le .col sono già alte uguali
+            // di default in una .row Bootstrap), altrimenti chi ha
+            // un'etichetta corta resterebbe più basso di chi va a due righe
+            const col = $('<div class="col d-flex"></div>');
             const button = $(`
                 <button class="btn ${isDefault ? 'btn-primary' : 'btn-dark'} bottone w-100" type="button"
                         data-label="${item.label}"
