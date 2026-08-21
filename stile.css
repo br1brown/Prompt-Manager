@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Baloo+2:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Baloo+2:wght@700;800&family=Anton&display=swap');
 
 :root {
     /* Colori principali */
@@ -914,6 +914,124 @@ body.meme-mode::after {
 body.meme-mode .container {
     position: relative;
     z-index: 2;
+    /* Ogni tanto un lampo "deep-fried": contrasto e saturazione portati
+       all'estremo per un istante, come nei meme surreali rifritti troppe
+       volte. Applicato al container (non al body) per non disturbare i
+       livelli fixed di particelle/coriandoli/cursore */
+    animation: memeDeepFryFlash 9s ease-in-out infinite;
+}
+
+/* --- Didascalie assurde in stile "meme surreale": Impact, tutto
+   maiuscolo, contorno nero spesso, comparse a caso senza alcun nesso --- */
+.meme-caption-layer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 30;
+    overflow: hidden;
+}
+
+body.meme-mode .meme-caption-layer {
+    display: block;
+}
+
+.meme-caption {
+    position: absolute;
+    left: 50%;
+    font-family: 'Anton', Impact, 'Arial Narrow Bold', sans-serif;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: clamp(1.1rem, 3.5vw, 2rem);
+    color: #fff;
+    letter-spacing: 0.02em;
+    text-shadow:
+        -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000,
+        -3px 0 0 #000, 3px 0 0 #000, 0 -3px 0 #000, 0 3px 0 #000;
+    opacity: 0;
+    animation-name: memeCaptionPop;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    max-width: 80vw;
+    text-align: center;
+    line-height: 1.15;
+}
+
+/* --- Finto errore di sistema in stile retrò, comparso senza motivo --- */
+.meme-retro-dialog {
+    position: fixed;
+    top: 18%;
+    left: 50%;
+    transform: translate(-50%, -16px) scale(0.92);
+    width: min(320px, 85vw);
+    background: #c0c0c0;
+    border: 2px solid #000;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, .4), inset -1px -1px 0 #808080, inset 1px 1px 0 #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+.meme-retro-dialog.visible {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+    pointer-events: auto;
+}
+
+.meme-retro-titlebar {
+    background: linear-gradient(90deg, #000080, #1084d0);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.meme-retro-titlebar button {
+    background: #c0c0c0;
+    border: 1px solid #000;
+    width: 18px;
+    height: 16px;
+    font-size: .7rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+.meme-retro-body {
+    padding: 1rem;
+    font-size: 0.85rem;
+    color: #000;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.meme-retro-icon {
+    font-size: 1.8rem;
+    flex: 0 0 auto;
+}
+
+.meme-retro-actions {
+    padding: 0 1rem 1rem;
+    text-align: right;
+}
+
+.meme-retro-actions button {
+    font-family: inherit;
+    background: #c0c0c0;
+    border: 2px outset #fff;
+    padding: 0.25rem 1.25rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.meme-retro-actions button:active {
+    border-style: inset;
 }
 
 /* --- Titolo con testo arcobaleno animato + badge "AI-Powered" --- */
@@ -1247,6 +1365,19 @@ body.meme-mode #back-to-top {
     50% { transform: rotate(var(--meme-rot, 0deg)) translateY(-6px); }
 }
 
+@keyframes memeDeepFryFlash {
+    0%, 92%, 100% { filter: none; }
+    94% { filter: saturate(4) contrast(1.8) brightness(1.1) hue-rotate(15deg); }
+    96% { filter: saturate(6) contrast(2.4) brightness(0.9) hue-rotate(-20deg); }
+    98% { filter: saturate(3) contrast(1.5); }
+}
+
+@keyframes memeCaptionPop {
+    0%, 100% { opacity: 0; transform: translateX(-50%) scale(.7) rotate(var(--meme-cap-rot, 0deg)); }
+    10%, 80% { opacity: 1; transform: translateX(-50%) scale(1) rotate(var(--meme-cap-rot, 0deg)); }
+    90% { opacity: 0; transform: translateX(-50%) scale(1.1) rotate(var(--meme-cap-rot, 0deg)); }
+}
+
 @keyframes memeBorderSpin {
     to { --meme-angle: 360deg; }
 }
@@ -1289,7 +1420,9 @@ body.meme-mode #back-to-top {
     .meme-particle-layer,
     .meme-ticker,
     .meme-confetti-layer,
-    .meme-cursor-trail-layer {
+    .meme-cursor-trail-layer,
+    .meme-caption-layer,
+    .meme-retro-dialog {
         display: none;
     }
     

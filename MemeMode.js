@@ -6,12 +6,40 @@ const CONFETTI_COUNT = 28;
 const CURSOR_SPARKLES = ['✨', '💫', '⭐'];
 const CURSOR_SPARKLE_INTERVAL_MS = 60;
 
+// Didascalie senza alcun nesso logico, come nei "surreal meme": l'assurdo
+// è il punto, non un bug.
+const CAPTIONS = [
+    'QUANDO CHIEDI ALL\'AI UN DESIGN "MODERNO"',
+    'NESSUN PENSIERO. SOLO GRADIENTI.',
+    'COSÌ È INIZIATA LA SINGOLARITÀ',
+    'IO: FALLO SOBRIO. L\'AI: 🌈✨🚀',
+    'STO VIVENDO IN 4D, TU IN 2D',
+    'IL DESIGN SYSTEM HA PRESO VITA PROPRIA'
+];
+
+// Finti errori di sistema retrò, comparsi senza alcun motivo apparente:
+// il contrasto fra l'estetica Windows 98 e il gergo da startup AI è
+// tutto il gioco.
+const RETRO_MESSAGES = [
+    { icon: '⚠️', text: 'Errore: rilevata sinergia eccessiva nel sistema.' },
+    { icon: '🖥️', text: 'Windows ha rilevato troppa positività. Riavviare la realtà?' },
+    { icon: '❗', text: 'L\'AI ha capito male anche questa richiesta.' },
+    { icon: '💭', text: 'Nessun pensiero rilevato. Solo gradienti.' },
+    { icon: '🌀', text: 'Attenzione: il vibe check ha restituito un errore critico.' },
+    { icon: '📠', text: 'Fax dall\'anno 2007: il tuo design è già vintage.' }
+];
+const RETRO_FIRST_DELAY_MS = 4000;
+const RETRO_MIN_INTERVAL_MS = 20000;
+const RETRO_MAX_INTERVAL_MS = 40000;
+const RETRO_VISIBLE_MS = 5000;
+
 /**
  * Modalità "meme": parodia esagerata del classico design system che
  * un'AI genera quando le si chiede qualcosa di "moderno" — gradienti
  * ovunque, glassmorphism, ticker di buzzword, coriandoli, una scia di
- * scintille che segue il mouse, tutto pieno di vita. Attivabile e
- * disattivabile dall'interruttore in cima alla pagina.
+ * scintille che segue il mouse, didascalie assurde in stile "surreal
+ * meme" e un finto popup di errore retrò senza alcun senso. Attivabile
+ * e disattivabile dall'interruttore in cima alla pagina.
  */
 export function initMemeMode() {
     const toggle = document.getElementById('memeModeToggle');
@@ -42,6 +70,77 @@ export function initMemeMode() {
     cursorTrailLayer.className = 'meme-cursor-trail-layer';
     cursorTrailLayer.setAttribute('aria-hidden', 'true');
     document.body.appendChild(cursorTrailLayer);
+
+    const captionLayer = document.createElement('div');
+    captionLayer.className = 'meme-caption-layer';
+    captionLayer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(captionLayer);
+
+    CAPTIONS.forEach((text, i) => {
+        const span = document.createElement('span');
+        span.className = 'meme-caption';
+        span.textContent = text;
+        span.style.top = `${15 + Math.random() * 55}%`;
+        span.style.setProperty('--meme-cap-rot', `${(Math.random() - 0.5) * 24}deg`);
+        span.style.animationDuration = `${9 + Math.random() * 4}s`;
+        span.style.animationDelay = `${i * 6 + Math.random() * 3}s`;
+        captionLayer.appendChild(span);
+    });
+
+    const retroDialog = document.createElement('div');
+    retroDialog.className = 'meme-retro-dialog';
+    retroDialog.setAttribute('role', 'status');
+    retroDialog.innerHTML = `
+        <div class="meme-retro-titlebar">
+            <span>Sistema</span>
+            <button type="button" class="meme-retro-close" aria-label="Chiudi">✕</button>
+        </div>
+        <div class="meme-retro-body">
+            <span class="meme-retro-icon"></span>
+            <span class="meme-retro-text"></span>
+        </div>
+        <div class="meme-retro-actions">
+            <button type="button" class="meme-retro-ok">OK</button>
+        </div>
+    `;
+    document.body.appendChild(retroDialog);
+
+    const retroIcon = retroDialog.querySelector('.meme-retro-icon');
+    const retroText = retroDialog.querySelector('.meme-retro-text');
+    let retroHideTimer = null;
+    let retroScheduleTimer = null;
+
+    const hideRetroDialog = () => {
+        retroDialog.classList.remove('visible');
+        clearTimeout(retroHideTimer);
+    };
+
+    const showRetroDialog = () => {
+        const message = RETRO_MESSAGES[Math.floor(Math.random() * RETRO_MESSAGES.length)];
+        retroIcon.textContent = message.icon;
+        retroText.textContent = message.text;
+        retroDialog.classList.add('visible');
+        clearTimeout(retroHideTimer);
+        retroHideTimer = setTimeout(hideRetroDialog, RETRO_VISIBLE_MS);
+    };
+
+    const scheduleRetroDialog = (delay) => {
+        clearTimeout(retroScheduleTimer);
+        retroScheduleTimer = setTimeout(() => {
+            showRetroDialog();
+            const next = RETRO_MIN_INTERVAL_MS + Math.random() * (RETRO_MAX_INTERVAL_MS - RETRO_MIN_INTERVAL_MS);
+            scheduleRetroDialog(next);
+        }, delay);
+    };
+
+    const stopRetroDialog = () => {
+        clearTimeout(retroScheduleTimer);
+        clearTimeout(retroHideTimer);
+        hideRetroDialog();
+    };
+
+    retroDialog.querySelector('.meme-retro-close').addEventListener('click', hideRetroDialog);
+    retroDialog.querySelector('.meme-retro-ok').addEventListener('click', hideRetroDialog);
 
     const burstConfetti = () => {
         for (let i = 0; i < CONFETTI_COUNT; i++) {
@@ -92,6 +191,12 @@ export function initMemeMode() {
         toggle.checked = enabled;
         localStorage.setItem(STORAGE_KEY, enabled ? '1' : '0');
         setCursorTrailActive(enabled);
+
+        if (enabled) {
+            scheduleRetroDialog(RETRO_FIRST_DELAY_MS);
+        } else {
+            stopRetroDialog();
+        }
 
         if (announce) {
             if (enabled) burstConfetti();
