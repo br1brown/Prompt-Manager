@@ -21,12 +21,14 @@ const CAPTIONS = [
 // il contrasto fra l'estetica Windows 98 e il gergo da startup AI è
 // tutto il gioco.
 const RETRO_MESSAGES = [
-    { icon: '⚠️', text: 'Errore: rilevata sinergia eccessiva nel sistema.' },
+    { icon: '🐟', text: 'Un pesce ha approvato silenziosamente questa palette.' },
     { icon: '🖥️', text: 'Windows ha rilevato troppa positività. Riavviare la realtà?' },
-    { icon: '❗', text: 'L\'AI ha capito male anche questa richiesta.' },
+    { icon: '🧦', text: 'Trovato un calzino spaiato nel codice sorgente.' },
     { icon: '💭', text: 'Nessun pensiero rilevato. Solo gradienti.' },
-    { icon: '🌀', text: 'Attenzione: il vibe check ha restituito un errore critico.' },
-    { icon: '📠', text: 'Fax dall\'anno 2007: il tuo design è già vintage.' }
+    { icon: '🪐', text: 'Il tuo prompt ha attirato l\'attenzione di Saturno.' },
+    { icon: '📠', text: 'Fax dall\'anno 2007: il tuo design è già vintage.' },
+    { icon: '🕰️', text: 'Attenzione: qui il tempo scorre in orizzontale.' },
+    { icon: '🍕', text: 'Una fetta di pizza ha bloccato il thread principale.' }
 ];
 const RETRO_FIRST_DELAY_MS = 4000;
 const RETRO_MIN_INTERVAL_MS = 20000;
