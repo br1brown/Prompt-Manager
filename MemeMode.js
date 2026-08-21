@@ -21,14 +21,14 @@ const CAPTIONS = [
 // il contrasto fra l'estetica Windows 98 e il gergo da startup AI è
 // tutto il gioco.
 const RETRO_MESSAGES = [
-    { icon: '🐟', text: 'Un pesce ha approvato silenziosamente questa palette.' },
-    { icon: '🖥️', text: 'Windows ha rilevato troppa positività. Riavviare la realtà?' },
-    { icon: '🧦', text: 'Trovato un calzino spaiato nel codice sorgente.' },
-    { icon: '🦆', text: 'Un\'anatra sta revisionando questo layout.' },
-    { icon: '🪐', text: 'Il tuo prompt ha attirato l\'attenzione di Saturno.' },
-    { icon: '📠', text: 'Fax dall\'anno 2007: il tuo design è già vintage.' },
-    { icon: '🕰️', text: 'Attenzione: qui il tempo scorre in orizzontale.' },
-    { icon: '🍕', text: 'Una fetta di pizza ha bloccato il thread principale.' }
+    { icon: '📝', text: 'Errore: il tuo prompt aveva bisogno di più stile.' },
+    { icon: '🖥️', text: 'Sistema in tilt: troppi toni di voce rilevati contemporaneamente.' },
+    { icon: '🎯', text: 'Tono perfetto individuato. Ora tocca a te scriverlo.' },
+    { icon: '📠', text: 'Fax dall\'anno 2007: il tuo prompt è già vintage.' },
+    { icon: '🧵', text: 'Il filo del discorso si è annodato durante l\'armonizzazione.' },
+    { icon: '🗂️', text: 'File non trovato: "il-tono-giusto-per-tutti.txt"' },
+    { icon: '🔤', text: 'Rilevate troppe virgole nel tuo testo di partenza.' },
+    { icon: '📤', text: 'Prompt generato e spedito... nella dimensione sbagliata.' }
 ];
 const RETRO_FIRST_DELAY_MS = 4000;
 const RETRO_MIN_INTERVAL_MS = 20000;
@@ -210,8 +210,8 @@ export function initMemeMode() {
                     timer: 2200,
                     timerProgressBar: true,
                     title: enabled
-                        ? '🚀 Design Reimmaginato con l\'AI™ ✨'
-                        : 'Tornato al design noioso 😴'
+                        ? '🚀 Prompt Power Attivato ✨'
+                        : 'Modalità sobria per i tuoi prompt 😴'
                 });
             }
         }
