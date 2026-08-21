@@ -10,11 +10,11 @@ const CURSOR_SPARKLE_INTERVAL_MS = 60;
 // è il punto, non un bug.
 const CAPTIONS = [
     'QUANDO CHIEDI ALL\'AI UN DESIGN "MODERNO"',
-    'IL GRADIENTE MI PARLA DI NOTTE',
-    'COSÌ È INIZIATA LA SINGOLARITÀ',
-    'IO: FALLO SOBRIO. L\'AI: 🌈✨🚀',
-    'STO VIVENDO IN 4D, TU IN 2D',
-    'IL DESIGN SYSTEM HA PRESO VITA PROPRIA'
+    'MIGLIORA IL TUO TESTO!',
+    'SCRIVI MEGLIO DI COSÌ!',
+    'TRASFORMA IL CAOS IN UN PROMPT PERFETTO!',
+    'UN TONO GIUSTO PER OGNI OCCASIONE!',
+    'IL TUO TESTO MERITA DI PIÙ!'
 ];
 
 // Finti errori di sistema retrò, comparsi senza alcun motivo apparente:
