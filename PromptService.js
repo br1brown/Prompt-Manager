@@ -1,7 +1,9 @@
+import { config } from './config.js';
+
 /**
  * Classe per la gestione della generazione dei prompt
  */
-class PromptService {
+export class PromptService {
     constructor() {
         this.lastClickedButton = null;
         this.selectedTone = null;
@@ -28,8 +30,21 @@ class PromptService {
         const result = this.formatPromptResult(task);
 
         $("#Risultato").val(result);
+        this.resetPreviewState();
 
         if (callback) callback();
+    }
+
+    /**
+     * Ogni nuova generazione riparte collassata: si vedono solo le prime
+     * righe del risultato (il resto sfuma nello sfondo, vedi CSS), con
+     * "Vedi il prompt completo" per espandere. Chi genera e copia non deve
+     * leggere per forza tutto il prompt: quel dettaglio resta disponibile
+     * ma non è imposto a chi non lo vuole (legge di Tesler).
+     */
+    resetPreviewState() {
+        $('.result-textarea-wrapper').removeClass('is-empty expanded');
+        $('#togglePreview').prop('hidden', false).attr('aria-expanded', 'false').text('Vedi il prompt completo');
     }
 
     /**

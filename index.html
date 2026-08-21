@@ -39,13 +39,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
             integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
     
-    <!-- Application Scripts -->
-    <script src="prompts.js"></script>
-    <script src="PromptService.js"></script>
-    <script src="UIRenderer.js"></script>
-    <script src="ModalManager.js"></script>
-    <script src="EventManager.js"></script>
-    <script src="PromptGenerator.js"></script>
+    <!-- Application Scripts (ES Modules) -->
+    <script type="module" src="main.js"></script>
 </head>
 
 <body>
@@ -86,22 +81,23 @@
             <!-- Sezione bottoni -->
             <section class="buttons-section" aria-labelledby="actions-label">
                 <h2 id="actions-label" class="visually-hidden">Azioni disponibili</h2>
-                <div id="button-container" role="group"></div>
+                <div id="category-tabs" class="category-tabs" role="tablist" aria-label="Categoria di prompt"></div>
+                <div id="button-container" role="tabpanel" aria-live="polite"></div>
             </section>
 
             <!-- Sezione risultato -->
             <section class="result-section" aria-labelledby="result-label">
                 <div class="form-group">
                     <div class="result-header">
-                        <label for="Risultato" id="result-label" class="form-label mb-0">
+                        <span id="result-label" class="form-label mb-0">
                             <i class="fas fa-code me-2" aria-hidden="true"></i>
                             Prompt generato
-                        </label>
+                        </span>
                         <div class="result-controls">
                             <div class="form-check form-switch">
-                                <input 
-                                    type="checkbox" 
-                                    class="form-check-input" 
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
                                     id="toggleNewlines"
                                     role="switch"
                                     aria-label="Mantieni interruzioni di riga nel testo">
@@ -110,23 +106,36 @@
                                     <span class="d-md-none">A capo</span>
                                 </label>
                             </div>
-                            <button 
-                                id="copia" 
-                                class="btn btn-secondary"
+                            <button
+                                id="copia"
+                                class="btn btn-primary"
                                 aria-label="Copia il prompt negli appunti">
                                 <i class="fas fa-clone me-1" aria-hidden="true"></i>
                                 <span class="d-none d-sm-inline">Copia</span>
                             </button>
                         </div>
                     </div>
-                    <textarea 
-                        class="form-control" 
-                        id="Risultato" 
-                        rows="15" 
-                        readonly
-                        aria-live="polite"
-                        aria-atomic="true"
-                        placeholder="Il prompt generato apparirà qui..."></textarea>
+
+                    <div class="result-textarea-wrapper is-empty">
+                        <textarea
+                            class="form-control"
+                            id="Risultato"
+                            rows="10"
+                            readonly
+                            aria-live="polite"
+                            aria-atomic="true"
+                            placeholder="Il prompt generato apparirà qui..."></textarea>
+                    </div>
+
+                    <button
+                        id="togglePreview"
+                        type="button"
+                        class="btn btn-link preview-toggle"
+                        aria-expanded="false"
+                        aria-controls="Risultato"
+                        hidden>
+                        Vedi il prompt completo
+                    </button>
                 </div>
             </section>
         </main>
@@ -147,12 +156,6 @@
         <small>&copy; 2026 Prompt Manager - Ottimizza i tuoi prompt AI</small>
     </footer>
 
-    <script>
-        // Inizializzazione quando il documento è pronto
-        $(document).ready(() => {
-            new PromptGenerator();
-        });
-    </script>
 </body>
 
 </html>

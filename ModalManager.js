@@ -1,7 +1,9 @@
+import { toneProfiles } from './data/toneProfiles.js';
+
 /**
  * Classe per la gestione delle modali
  */
-class ModalManager {
+export class ModalManager {
     constructor(promptService) {
         this.promptService = promptService;
         this.storageKey = 'toneUsageStats';

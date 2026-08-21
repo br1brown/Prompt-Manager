@@ -14,7 +14,8 @@
     --text-secondary: #6b7280;
     --border-color: #d1d5db;
     --border-light: #e5e7eb;
-    
+    --result-bg: #f9fafb;
+
     /* Layout */
     --max-width: 1400px;
     --container-padding: 2rem;
@@ -54,6 +55,7 @@
         --border-light: #374151;
         --primary-color: #60a5fa;
         --primary-hover: #3b82f6;
+        --result-bg: #1f2937;
     }
     
     .swal2-popup {
@@ -102,7 +104,7 @@
     
     /* Risultato textarea */
     #Risultato {
-        background-color: #1f2937 !important;
+        background-color: var(--result-bg) !important;
         border-color: #4b5563 !important;
         color: #e5e7eb !important;
     }
@@ -224,8 +226,12 @@ textarea {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     white-space: nowrap;
+    /* Target minimo consigliato per il tocco (Apple HIG / Material): legge di Fitts */
+    min-height: 44px;
+    min-width: 44px;
 }
 
 .btn:hover:not(:disabled) {
@@ -296,6 +302,40 @@ textarea {
     border-bottom: 2px solid var(--border-light);
 }
 
+/* Tab di categoria: una sola categoria di bottoni visibile alla volta
+   invece di tutte insieme (legge di Hick: meno opzioni simultanee, decisione più rapida) */
+.category-tabs {
+    display: inline-flex;
+    gap: 0.25rem;
+    background-color: var(--primary-bg);
+    padding: 0.25rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.tab-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    min-height: 44px;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    background-color: var(--card-bg);
+    color: var(--primary-color);
+    box-shadow: var(--shadow-sm);
+}
+
 /* Grid layout responsive per i bottoni */
 #button-container .d-flex.flex-wrap {
     display: grid !important;
@@ -323,6 +363,14 @@ textarea {
     margin-bottom: var(--spacing-sm);
     flex-wrap: wrap;
     gap: var(--spacing-sm);
+    /* Il bottone Copia (l'azione più ripetuta) resta sempre raggiungibile
+       anche quando l'anteprima è lunga e si scorre la pagina (legge di Fitts + Jakob) */
+    position: sticky;
+    top: 0;
+    background-color: var(--card-bg);
+    padding-top: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
+    z-index: 5;
 }
 
 .result-controls {
@@ -332,13 +380,64 @@ textarea {
     flex-wrap: wrap;
 }
 
+/* Contenitore della textarea di risultato: stessa forma della textarea di
+   input (idea di "traduzione": testo dentro, testo fuori), ma collassata di
+   default sulle prime righe, che sfumano nello sfondo invece di mostrare
+   subito tutto il prompt (vincoli, lessico vietato...) a chi vuole solo
+   generare e copiare (legge di Tesler: quel dettaglio resta disponibile ma
+   non è imposto) */
+.result-textarea-wrapper {
+    position: relative;
+}
+
+.result-textarea-wrapper::after {
+    content: '';
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    height: 6rem;
+    background: linear-gradient(to bottom, transparent, var(--result-bg) 70%);
+    pointer-events: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.result-textarea-wrapper.is-empty::after,
+.result-textarea-wrapper.expanded::after {
+    content: none;
+}
+
 #Risultato {
     font-family: var(--font-mono);
     font-size: 0.95rem;
-    background-color: #f9fafb;
+    background-color: var(--result-bg);
     border: 1px solid var(--border-light);
     color: var(--text-primary);
     line-height: 1.5;
+    max-height: 9rem;
+    overflow-y: hidden;
+    resize: none;
+    transition: max-height var(--transition-slow);
+}
+
+.result-textarea-wrapper.expanded #Risultato {
+    max-height: 32rem;
+    overflow-y: auto;
+    resize: vertical;
+}
+
+.preview-toggle {
+    display: block;
+    margin: var(--spacing-xs) auto var(--spacing-sm);
+    padding: 0.25rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600;
+    color: var(--primary-color);
+    background: none;
+}
+
+.preview-toggle:hover {
+    text-decoration: underline;
 }
 
 /* Back to top button */
@@ -494,6 +593,24 @@ textarea {
 :focus-visible {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
+}
+
+/* Maggiore contrasto per chi lo richiede a livello di sistema */
+@media (prefers-contrast: more) {
+    :root {
+        --border-color: #6b7280;
+        --border-light: #9ca3af;
+    }
+
+    .tab-btn.active {
+        outline: 2px solid var(--primary-color);
+        outline-offset: -2px;
+    }
+
+    #Risultato,
+    .profile-card {
+        border-width: 2px;
+    }
 }
 
 /* Animazioni ridotte per chi preferisce */
