@@ -348,6 +348,12 @@ textarea {
 .bottone {
     width: 100%;
     justify-content: center;
+    /* Le etichette lunghe (es. "alla 'Occhio al mondo'") in una grid a
+       colonne strette altrimenti sforano oltre il padding: qui possono
+       andare su due righe invece di uscire dal bottone */
+    white-space: normal;
+    text-align: center;
+    min-width: 0;
 }
 
 /* Result section */
