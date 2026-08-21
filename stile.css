@@ -928,16 +928,10 @@ body.meme-mode .container {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 30;
+    /* Le didascalie passano davanti a tutto, finto popup di sistema
+       compreso: la realtà che si rompe sopra ogni cosa è tutto il punto */
+    z-index: 10500;
     overflow: hidden;
-    transition: opacity var(--transition-base);
-}
-
-/* Mentre il finto popup di sistema è aperto, le didascalie si mettono
-   in pausa: evita che finiscano visivamente sopra il popup (il layer
-   animato può finire sopra lo z-index più alto del dialog) */
-.meme-caption-layer.meme-caption-suppressed {
-    opacity: 0;
 }
 
 body.meme-mode .meme-caption-layer {

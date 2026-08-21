@@ -114,7 +114,6 @@ export function initMemeMode() {
 
     const hideRetroDialog = () => {
         retroDialog.classList.remove('visible');
-        captionLayer.classList.remove('meme-caption-suppressed');
         clearTimeout(retroHideTimer);
     };
 
@@ -123,9 +122,6 @@ export function initMemeMode() {
         retroIcon.textContent = message.icon;
         retroText.textContent = message.text;
         retroDialog.classList.add('visible');
-        // Le didascalie fluttuanti vanno in pausa finché il popup è aperto,
-        // altrimenti possono finire sopra di lui (vedi commento in CSS)
-        captionLayer.classList.add('meme-caption-suppressed');
         clearTimeout(retroHideTimer);
         retroHideTimer = setTimeout(hideRetroDialog, RETRO_VISIBLE_MS);
     };
