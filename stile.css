@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Baloo+2:wght@700;800&display=swap');
+
 :root {
     /* Colori principali */
     --primary-bg: #e5e7eb;
@@ -719,12 +721,404 @@ textarea {
     }
 }
 
+/* ==========================================================================
+   MEME MODE
+   Parodia volutamente eccessiva del "design system AI moderno": gradienti
+   ovunque, glassmorphism, stelline fluttuanti, testo arcobaleno animato.
+   Attivabile dall'interruttore in cima alla pagina. Rispetta comunque
+   prefers-reduced-motion (regola globale già presente più sopra).
+   ========================================================================== */
+
+@property --meme-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+/* --- Interruttore (visibile sempre, prima e dopo l'attivazione) --- */
+.meme-mode-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: var(--spacing-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.meme-mode-label--on {
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.meme-mode-switch {
+    position: relative;
+    display: inline-block;
+    width: 56px;
+    height: 30px;
+    flex: 0 0 auto;
+}
+
+.meme-mode-switch input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.meme-mode-slider {
+    position: absolute;
+    inset: 0;
+    background-color: var(--border-color);
+    border-radius: 999px;
+    transition: background-color var(--transition-base);
+}
+
+.meme-mode-slider-emoji {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: transform var(--transition-base), background var(--transition-base);
+}
+
+.meme-mode-switch input:checked ~ .meme-mode-slider {
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8, #4ade80, #facc15);
+    background-size: 300% auto;
+    animation: memeTextShine 3s linear infinite;
+}
+
+.meme-mode-switch input:checked ~ .meme-mode-slider .meme-mode-slider-emoji {
+    transform: translateX(26px) rotate(360deg);
+    box-shadow: 0 0 12px rgba(255, 255, 255, .9), 0 0 20px rgba(255, 110, 196, .8);
+}
+
+.meme-mode-switch input:focus-visible ~ .meme-mode-slider {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* --- Particelle fluttuanti (generate via JS, presenti solo quando attivo) --- */
+.meme-particle-layer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.meme-mode .meme-particle-layer {
+    display: block;
+}
+
+.meme-particle {
+    position: absolute;
+    top: 105%;
+    opacity: 0;
+    animation-name: memeFloatUp;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, .8));
+}
+
+@media (max-width: 576px) {
+    .meme-particle:nth-child(even) {
+        display: none;
+    }
+}
+
+/* --- Sfondo animato e "blob" sfocati in stile hero AI --- */
+body.meme-mode {
+    font-family: 'Fredoka', 'Baloo 2', var(--font-base);
+    background: linear-gradient(120deg, #ff6ec4, #7873f5, #38bdf8, #4ade80, #facc15, #ff6ec4);
+    background-size: 400% 400%;
+    animation: memeGradientShift 10s ease infinite;
+    position: relative;
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='32' width='32'%3E%3Ctext y='24' font-size='28'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E") 16 16, auto;
+}
+
+body.meme-mode input,
+body.meme-mode textarea,
+body.meme-mode select {
+    cursor: text;
+}
+
+body.meme-mode::before,
+body.meme-mode::after {
+    content: '';
+    position: fixed;
+    width: 45vmax;
+    height: 45vmax;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.55;
+    z-index: 0;
+    pointer-events: none;
+    animation: memeBlobFloat 14s ease-in-out infinite;
+}
+
+body.meme-mode::before {
+    background: radial-gradient(circle, #ff6ec4, transparent 70%);
+    top: -15vmax;
+    left: -10vmax;
+}
+
+body.meme-mode::after {
+    background: radial-gradient(circle, #38bdf8, transparent 70%);
+    bottom: -15vmax;
+    right: -10vmax;
+    animation-delay: -7s;
+}
+
+body.meme-mode .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* --- Titolo con testo arcobaleno animato + badge "AI-Powered" --- */
+body.meme-mode .app-header {
+    position: relative;
+    padding-top: 1.5rem;
+}
+
+body.meme-mode .app-header::before {
+    content: "🤖 100% AI-Powered Vibes™";
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-4deg);
+    background: linear-gradient(90deg, #facc15, #ff6ec4);
+    color: #1f2937;
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+    animation: memeBadgeBounce 2.4s ease-in-out infinite;
+    white-space: nowrap;
+    z-index: 3;
+}
+
+body.meme-mode .header-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(2.5rem, 8vw, 4.5rem) !important;
+    font-weight: 800 !important;
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8, #4ade80, #facc15, #ff6ec4);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: memeTextShine 3s linear infinite, memeWiggle 2.4s ease-in-out infinite;
+    display: inline-block;
+}
+
+body.meme-mode .app-header p.text-muted {
+    font-weight: 600;
+    color: var(--text-primary) !important;
+    text-shadow: 0 0 12px rgba(255, 255, 255, .6);
+}
+
+/* --- Card in stile "glass" con bordo arcobaleno rotante --- */
+body.meme-mode .form-section,
+body.meme-mode .buttons-section,
+body.meme-mode .result-section {
+    background-color: rgba(255, 255, 255, .35) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 3px solid transparent;
+    border-radius: 28px !important;
+    background-image: linear-gradient(rgba(255, 255, 255, .45), rgba(255, 255, 255, .2)),
+        conic-gradient(from var(--meme-angle, 0deg), #ff6ec4, #7873f5, #38bdf8, #4ade80, #facc15, #ff6ec4);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 8px 32px rgba(120, 115, 245, .35), 0 0 60px rgba(255, 110, 196, .25),
+        inset 0 0 20px rgba(255, 255, 255, .3);
+    animation: memeBorderSpin 6s linear infinite;
+    position: relative;
+    z-index: 2;
+}
+
+body.meme-mode .category-title {
+    color: var(--text-primary) !important;
+    font-family: 'Baloo 2', cursive;
+    border-bottom: none;
+}
+
+body.meme-mode .form-label,
+body.meme-mode #result-label {
+    color: var(--text-primary) !important;
+    font-weight: 700;
+}
+
+/* --- Bottoni: pillole arcobaleno con brillio e rimbalzo --- */
+body.meme-mode .btn {
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8, #4ade80, #facc15) !important;
+    background-size: 300% auto !important;
+    color: #fff !important;
+    font-weight: 800;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+    border: none !important;
+    box-shadow: 0 4px 20px rgba(120, 115, 245, .5), 0 0 25px rgba(255, 110, 196, .35);
+    animation: memeTextShine 4s linear infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+body.meme-mode .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, .55) 50%, transparent 70%);
+    background-size: 250% 250%;
+    animation: memeShineSweep 2.6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+body.meme-mode .btn:hover:not(:disabled) {
+    transform: translateY(-4px) scale(1.08) rotate(-2deg);
+    box-shadow: 0 10px 30px rgba(120, 115, 245, .6), 0 0 45px rgba(255, 110, 196, .6);
+}
+
+body.meme-mode .tab-btn {
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+body.meme-mode .tab-btn.active {
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8) !important;
+    color: #fff !important;
+    box-shadow: 0 0 20px rgba(120, 115, 245, .5);
+}
+
+body.meme-mode .category-tabs {
+    background-color: rgba(255, 255, 255, .35);
+    backdrop-filter: blur(10px);
+}
+
+/* --- Risultato: pannello glow con testo leggibile --- */
+body.meme-mode #Risultato {
+    background-color: rgba(255, 255, 255, .55) !important;
+    color: #1f2937 !important;
+    border: 2px solid rgba(255, 255, 255, .6) !important;
+    box-shadow: inset 0 0 20px rgba(120, 115, 245, .15);
+}
+
+body.meme-mode .result-header {
+    background-color: transparent !important;
+}
+
+/* --- Modali SweetAlert2 e card profilo: stesso trattamento glam --- */
+body.meme-mode .swal2-popup {
+    background: rgba(255, 255, 255, .85) !important;
+    backdrop-filter: blur(16px);
+    border-radius: 24px !important;
+    box-shadow: 0 0 60px rgba(255, 110, 196, .4);
+}
+
+body.meme-mode .swal2-title {
+    font-family: 'Baloo 2', cursive;
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.meme-mode .profile-card {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, .5) !important;
+}
+
+body.meme-mode .profile-card:hover {
+    transform: translateY(-4px) rotate(1deg) scale(1.03);
+    box-shadow: 0 0 25px rgba(120, 115, 245, .5);
+}
+
+body.meme-mode .profile-card.selected {
+    border-color: #ff6ec4 !important;
+    box-shadow: 0 0 0 3px rgba(255, 110, 196, .3), 0 0 25px rgba(120, 115, 245, .5) !important;
+}
+
+/* --- Back to top: razzo pulsante invece di una semplice freccia --- */
+body.meme-mode #back-to-top {
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8, #4ade80, #facc15) !important;
+    background-size: 300% auto !important;
+    animation: memeTextShine 3s linear infinite, memeBadgeBounce 1.6s ease-in-out infinite;
+    box-shadow: 0 0 25px rgba(255, 110, 196, .6);
+}
+
+/* --- Animazioni --- */
+@keyframes memeGradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes memeBlobFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(6vmax, 4vmax) scale(1.15); }
+}
+
+@keyframes memeTextShine {
+    to { background-position: 300% center; }
+}
+
+@keyframes memeWiggle {
+    0%, 100% { transform: rotate(-1.5deg); }
+    50% { transform: rotate(1.5deg); }
+}
+
+@keyframes memeBadgeBounce {
+    0%, 100% { transform: translateX(-50%) rotate(-4deg) translateY(0); }
+    50% { transform: translateX(-50%) rotate(-4deg) translateY(-6px); }
+}
+
+@keyframes memeBorderSpin {
+    to { --meme-angle: 360deg; }
+}
+
+@keyframes memeShineSweep {
+    0% { background-position: 200% 200%; }
+    100% { background-position: -50% -50%; }
+}
+
+@keyframes memeFloatUp {
+    0% { transform: translateY(0) rotate(0deg) scale(.6); opacity: 0; }
+    10% { opacity: 1; }
+    50% { transform: translateY(-55vh) rotate(180deg) scale(1.1); }
+    90% { opacity: 1; }
+    100% { transform: translateY(-115vh) rotate(360deg) scale(.6); opacity: 0; }
+}
+
 /* Print styles */
 @media print {
     .buttons-section,
     .result-controls,
     #back-to-top,
-    .app-footer {
+    .app-footer,
+    .meme-mode-bar,
+    .meme-particle-layer {
         display: none;
     }
     
