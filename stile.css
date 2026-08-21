@@ -14,7 +14,8 @@
     --text-secondary: #6b7280;
     --border-color: #d1d5db;
     --border-light: #e5e7eb;
-    
+    --result-bg: #f9fafb;
+
     /* Layout */
     --max-width: 1400px;
     --container-padding: 2rem;
@@ -54,6 +55,7 @@
         --border-light: #374151;
         --primary-color: #60a5fa;
         --primary-hover: #3b82f6;
+        --result-bg: #1f2937;
     }
     
     .swal2-popup {
@@ -102,7 +104,7 @@
     
     /* Risultato textarea */
     #Risultato {
-        background-color: #1f2937 !important;
+        background-color: var(--result-bg) !important;
         border-color: #4b5563 !important;
         color: #e5e7eb !important;
     }
@@ -378,51 +380,55 @@ textarea {
     flex-wrap: wrap;
 }
 
-/* Anteprima del prompt generato, divisa in sezioni etichettate invece di un
-   unico blocco di testo (legge di Miller: informazione raggruppata in chunk).
-   Collassata di default: si vedono solo le prime righe, che sfumano nello
-   sfondo, per non mostrare a tutti dettagli (vincoli, lessico vietato...)
-   utili solo a chi li cerca esplicitamente (legge di Tesler) */
-.risultato-preview {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
-    margin-bottom: 0;
+/* Contenitore della textarea di risultato: stessa forma della textarea di
+   input (idea di "traduzione": testo dentro, testo fuori), ma collassata di
+   default sulle prime righe, che sfumano nello sfondo invece di mostrare
+   subito tutto il prompt (vincoli, lessico vietato...) a chi vuole solo
+   generare e copiare (legge di Tesler: quel dettaglio resta disponibile ma
+   non è imposto) */
+.result-textarea-wrapper {
     position: relative;
+}
+
+.result-textarea-wrapper::after {
+    content: '';
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    height: 3.5rem;
+    background: linear-gradient(to bottom, transparent, var(--result-bg) 85%);
+    pointer-events: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.result-textarea-wrapper.is-empty::after,
+.result-textarea-wrapper.expanded::after {
+    content: none;
+}
+
+#Risultato {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    background-color: var(--result-bg);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    line-height: 1.5;
     max-height: 9rem;
-    overflow: hidden;
+    overflow-y: hidden;
+    resize: none;
     transition: max-height var(--transition-slow);
 }
 
-.risultato-preview::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 3.5rem;
-    background: linear-gradient(to bottom, transparent, var(--card-bg) 85%);
-    pointer-events: none;
-}
-
-.risultato-preview.expanded {
-    max-height: 3000px;
-}
-
-.risultato-preview.is-empty,
-.risultato-preview.expanded {
-    padding-bottom: var(--spacing-md);
-}
-
-.risultato-preview.is-empty::after,
-.risultato-preview.expanded::after {
-    content: none;
+.result-textarea-wrapper.expanded #Risultato {
+    max-height: 32rem;
+    overflow-y: auto;
+    resize: vertical;
 }
 
 .preview-toggle {
     display: block;
-    margin: 0 auto var(--spacing-sm);
+    margin: var(--spacing-xs) auto var(--spacing-sm);
     padding: 0.25rem 0.75rem !important;
     font-size: 0.875rem !important;
     font-weight: 600;
@@ -432,77 +438,6 @@ textarea {
 
 .preview-toggle:hover {
     text-decoration: underline;
-}
-
-.risultato-empty {
-    margin: 0;
-}
-
-.preview-section {
-    margin-bottom: var(--spacing-sm);
-}
-
-.preview-section:last-child {
-    margin-bottom: 0;
-}
-
-.preview-label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--primary-color);
-    margin-bottom: 0.25rem;
-}
-
-.preview-content {
-    color: var(--text-primary);
-    line-height: 1.5;
-}
-
-.preview-content ul {
-    margin: 0;
-    padding-left: 1.25rem;
-}
-
-.preview-content pre {
-    white-space: pre-wrap;
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    background: var(--primary-bg);
-    padding: var(--spacing-xs);
-    border-radius: var(--radius);
-    margin: 0;
-}
-
-/* Testo grezzo: nascosto per default, disponibile per modifiche manuali
-   prima della copia (legge di Tesler: la complessità resta disponibile ma
-   fuori dalla vista di chi non ne ha bisogno) */
-.raw-result-details summary {
-    cursor: pointer;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 0.5rem 0;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.raw-result-details summary:hover {
-    color: var(--text-primary);
-}
-
-.raw-result-details[open] summary {
-    margin-bottom: var(--spacing-xs);
-}
-
-#Risultato {
-    font-family: var(--font-mono);
-    font-size: 0.95rem;
-    background-color: #f9fafb;
-    border: 1px solid var(--border-light);
-    color: var(--text-primary);
-    line-height: 1.5;
 }
 
 /* Back to top button */
@@ -672,7 +607,7 @@ textarea {
         outline-offset: -2px;
     }
 
-    .risultato-preview,
+    #Risultato,
     .profile-card {
         border-width: 2px;
     }

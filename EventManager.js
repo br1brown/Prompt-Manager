@@ -24,14 +24,14 @@ export class EventManager {
     }
 
     /**
-     * Espande/comprime l'anteprima del prompt (collassata di default)
+     * Espande/comprime la textarea del risultato (collassata di default)
      */
     togglePreview() {
-        const preview = $('#risultatoPreview');
+        const wrapper = $('.result-textarea-wrapper');
         const btn = $('#togglePreview');
-        const isExpanded = preview.hasClass('expanded');
+        const isExpanded = wrapper.hasClass('expanded');
 
-        preview.toggleClass('expanded', !isExpanded);
+        wrapper.toggleClass('expanded', !isExpanded);
         btn.attr('aria-expanded', String(!isExpanded));
         btn.text(isExpanded ? 'Vedi il prompt completo' : 'Comprimi');
     }

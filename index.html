@@ -116,12 +116,15 @@
                         </div>
                     </div>
 
-                    <div
-                        id="risultatoPreview"
-                        class="risultato-preview is-empty"
-                        aria-live="polite"
-                        aria-atomic="true">
-                        <p class="risultato-empty text-muted">Il prompt generato apparirà qui...</p>
+                    <div class="result-textarea-wrapper is-empty">
+                        <textarea
+                            class="form-control"
+                            id="Risultato"
+                            rows="10"
+                            readonly
+                            aria-live="polite"
+                            aria-atomic="true"
+                            placeholder="Il prompt generato apparirà qui..."></textarea>
                     </div>
 
                     <button
@@ -129,20 +132,10 @@
                         type="button"
                         class="btn btn-link preview-toggle"
                         aria-expanded="false"
-                        aria-controls="risultatoPreview"
+                        aria-controls="Risultato"
                         hidden>
                         Vedi il prompt completo
                     </button>
-
-                    <details class="raw-result-details">
-                        <summary>Testo grezzo (per modifiche manuali prima della copia)</summary>
-                        <textarea
-                            class="form-control"
-                            id="Risultato"
-                            rows="12"
-                            readonly
-                            placeholder="Il prompt generato apparirà qui..."></textarea>
-                    </details>
                 </div>
             </section>
         </main>

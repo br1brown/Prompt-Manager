@@ -30,55 +30,21 @@ export class PromptService {
         const result = this.formatPromptResult(task);
 
         $("#Risultato").val(result);
-        this.renderPreview(task);
+        this.resetPreviewState();
 
         if (callback) callback();
     }
 
     /**
-     * Renderizza il pannello di anteprima con sezioni etichettate separate
-     * (Obiettivo, Vincoli, Avvertenze, Contesto) invece di un unico blocco
-     * di testo, per ridurre il carico di lettura (legge di Miller).
-     * Il testo copiato da #Risultato resta invariato: qui cambia solo
-     * la presentazione visiva.
-     *
-     * Di default l'anteprima è collassata (poche righe che sfumano nello
-     * sfondo, vedi CSS) e va espansa con "Vedi il prompt completo": la
-     * maggior parte di chi usa lo strumento genera e copia senza aver
-     * bisogno di leggere vincoli/avvertenze per intero (legge di Tesler:
-     * quel dettaglio resta disponibile ma non è imposto a chi non lo vuole).
+     * Ogni nuova generazione riparte collassata: si vedono solo le prime
+     * righe del risultato (il resto sfuma nello sfondo, vedi CSS), con
+     * "Vedi il prompt completo" per espandere. Chi genera e copia non deve
+     * leggere per forza tutto il prompt: quel dettaglio resta disponibile
+     * ma non è imposto a chi non lo vuole (legge di Tesler).
      */
-    renderPreview(task) {
-        const preview = $('#risultatoPreview').empty();
-        const toggleBtn = $('#togglePreview');
-
-        if (!task) {
-            preview.addClass('is-empty').removeClass('expanded');
-            toggleBtn.attr('hidden', true);
-            return;
-        }
-
-        preview.removeClass('is-empty expanded');
-        toggleBtn.prop('hidden', false).attr('aria-expanded', 'false').text('Vedi il prompt completo');
-
-        const escapeHtml = (str) => $('<div>').text(str).html();
-
-        const addSection = (label, contentHtml) => {
-            preview.append(`
-                <div class="preview-section">
-                    <span class="preview-label">${label}</span>
-                    <div class="preview-content">${contentHtml}</div>
-                </div>
-            `);
-        };
-
-        if (task.objective) addSection('Obiettivo', `<p>${escapeHtml(task.objective)}</p>`);
-        if (task.output) addSection('Formato output', `<pre>${escapeHtml(task.output)}</pre>`);
-        if (Array.isArray(task.constraints) && task.constraints.length > 0)
-            addSection('Vincoli', `<ul>${task.constraints.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul>`);
-        if (Array.isArray(task.warnings) && task.warnings.length > 0)
-            addSection('Avvertenze', `<ul>${task.warnings.map(w => `<li>${escapeHtml(w)}</li>`).join('')}</ul>`);
-        if (task.context) addSection('Contesto', `<p>${escapeHtml(task.context)}</p>`);
+    resetPreviewState() {
+        $('.result-textarea-wrapper').removeClass('is-empty expanded');
+        $('#togglePreview').prop('hidden', false).attr('aria-expanded', 'false').text('Vedi il prompt completo');
     }
 
     /**
