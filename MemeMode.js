@@ -10,7 +10,7 @@ const CURSOR_SPARKLE_INTERVAL_MS = 60;
 // è il punto, non un bug.
 const CAPTIONS = [
     'QUANDO CHIEDI ALL\'AI UN DESIGN "MODERNO"',
-    'NESSUN PENSIERO. SOLO GRADIENTI.',
+    'IL GRADIENTE MI PARLA DI NOTTE',
     'COSÌ È INIZIATA LA SINGOLARITÀ',
     'IO: FALLO SOBRIO. L\'AI: 🌈✨🚀',
     'STO VIVENDO IN 4D, TU IN 2D',
@@ -24,7 +24,7 @@ const RETRO_MESSAGES = [
     { icon: '🐟', text: 'Un pesce ha approvato silenziosamente questa palette.' },
     { icon: '🖥️', text: 'Windows ha rilevato troppa positività. Riavviare la realtà?' },
     { icon: '🧦', text: 'Trovato un calzino spaiato nel codice sorgente.' },
-    { icon: '💭', text: 'Nessun pensiero rilevato. Solo gradienti.' },
+    { icon: '🦆', text: 'Un\'anatra sta revisionando questo layout.' },
     { icon: '🪐', text: 'Il tuo prompt ha attirato l\'attenzione di Saturno.' },
     { icon: '📠', text: 'Fax dall\'anno 2007: il tuo design è già vintage.' },
     { icon: '🕰️', text: 'Attenzione: qui il tempo scorre in orizzontale.' },
