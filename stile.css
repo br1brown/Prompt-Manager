@@ -337,13 +337,6 @@ textarea {
     box-shadow: var(--shadow-sm);
 }
 
-/* Grid layout responsive per i bottoni */
-#button-container .d-flex.flex-wrap {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--spacing-sm);
-}
-
 .bottone {
     width: 100%;
     justify-content: center;
@@ -636,10 +629,6 @@ textarea {
     :root {
         --max-width: 100%;
     }
-    
-    #button-container .d-flex.flex-wrap {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    }
 }
 
 /* Mobile */
@@ -669,11 +658,6 @@ textarea {
     .result-controls {
         width: 100%;
         justify-content: space-between;
-    }
-    
-    #button-container .d-flex.flex-wrap {
-        grid-template-columns: 1fr 1fr;
-        gap: var(--spacing-xs);
     }
     
     .btn {
@@ -706,10 +690,6 @@ textarea {
 
     .profile-card {
         margin-bottom: 0.75rem;
-    }
-    
-    #button-container .d-flex.flex-wrap {
-        grid-template-columns: 1fr;
     }
 }
 
