@@ -1,7 +1,9 @@
+import { config } from './config.js';
+
 /**
  * Classe per la gestione della generazione dei prompt
  */
-class PromptService {
+export class PromptService {
     constructor() {
         this.lastClickedButton = null;
         this.selectedTone = null;

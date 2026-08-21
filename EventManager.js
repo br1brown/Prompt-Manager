@@ -1,7 +1,10 @@
+import { config } from './config.js';
+import { linkAI } from './data/linkAI.js';
+
 /**
  * Classe per la gestione degli eventi dell'interfaccia
  */
-class EventManager {
+export class EventManager {
     constructor(promptService, modalManager) {
         this.promptService = promptService;
         this.modalManager = modalManager;

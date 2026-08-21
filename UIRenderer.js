@@ -1,8 +1,10 @@
 
+import { config } from './config.js';
+
 /**
  * Classe per il rendering dell'interfaccia utente
  */
-class UIRenderer {
+export class UIRenderer {
     /**
      * Renderizza i bottoni dell'interfaccia
      */

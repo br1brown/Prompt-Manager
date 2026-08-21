@@ -39,13 +39,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
             integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
     
-    <!-- Application Scripts -->
-    <script src="prompts.js"></script>
-    <script src="PromptService.js"></script>
-    <script src="UIRenderer.js"></script>
-    <script src="ModalManager.js"></script>
-    <script src="EventManager.js"></script>
-    <script src="PromptGenerator.js"></script>
+    <!-- Application Scripts (ES Modules) -->
+    <script type="module" src="main.js"></script>
 </head>
 
 <body>
@@ -147,12 +142,6 @@
         <small>&copy; 2026 Prompt Manager - Ottimizza i tuoi prompt AI</small>
     </footer>
 
-    <script>
-        // Inizializzazione quando il documento è pronto
-        $(document).ready(() => {
-            new PromptGenerator();
-        });
-    </script>
 </body>
 
 </html>

@@ -26,14 +26,25 @@ L'applicazione è completamente web-based e non richiede installazioni. Funziona
 prompt-manager/
 ├── index.html              # Pagina principale
 ├── stile.css              # Stili CSS personalizzati
+├── main.js                 # Entry point (ES module), avvia PromptGenerator
 ├── EventManager.js        # Gestione eventi dell'interfaccia
 ├── ModalManager.js        # Gestione delle finestre modali
 ├── PromptGenerator.js     # Classe principale di orchestrazione
 ├── PromptService.js       # Servizio per la generazione dei prompt
 ├── UIRenderer.js          # Rendering dell'interfaccia utente
-├── prompts.js             # Definizione dei template e dei vari prompt
+├── promptFactory.js        # Helper condivisi per costruire i task-prompt
+├── config.js                # Catalogo dei bottoni/prompt (aggrega prompts/)
+├── prompts/                 # Definizione dei vari prompt, per categoria
+│   ├── armonizzazione.js
+│   └── revisione.js
+├── data/                    # Dati puri (lessico vietato, profili tono, link AI)
+│   ├── lessico.js
+│   ├── toneProfiles.js
+│   └── linkAI.js
 └── icon.svg               # Icona dell'applicazione
 ```
+
+L'app è caricata interamente tramite moduli ES nativi (`<script type="module">`), senza bundler né build step: ogni file è servito così com'è, il che la rende compatibile con GitHub Pages.
 
 ## 🌐 Dipendenze
 L'applicazione utilizza le seguenti librerie CDN:
