@@ -30,8 +30,40 @@ export class PromptService {
         const result = this.formatPromptResult(task);
 
         $("#Risultato").val(result);
+        this.renderPreview(task);
 
         if (callback) callback();
+    }
+
+    /**
+     * Renderizza il pannello di anteprima con sezioni etichettate separate
+     * (Obiettivo, Vincoli, Avvertenze, Contesto) invece di un unico blocco
+     * di testo, per ridurre il carico di lettura (legge di Miller).
+     * Il testo copiato da #Risultato resta invariato: qui cambia solo
+     * la presentazione visiva.
+     */
+    renderPreview(task) {
+        const preview = $('#risultatoPreview').empty();
+        if (!task) return;
+
+        const escapeHtml = (str) => $('<div>').text(str).html();
+
+        const addSection = (label, contentHtml) => {
+            preview.append(`
+                <div class="preview-section">
+                    <span class="preview-label">${label}</span>
+                    <div class="preview-content">${contentHtml}</div>
+                </div>
+            `);
+        };
+
+        if (task.objective) addSection('Obiettivo', `<p>${escapeHtml(task.objective)}</p>`);
+        if (task.output) addSection('Formato output', `<pre>${escapeHtml(task.output)}</pre>`);
+        if (Array.isArray(task.constraints) && task.constraints.length > 0)
+            addSection('Vincoli', `<ul>${task.constraints.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul>`);
+        if (Array.isArray(task.warnings) && task.warnings.length > 0)
+            addSection('Avvertenze', `<ul>${task.warnings.map(w => `<li>${escapeHtml(w)}</li>`).join('')}</ul>`);
+        if (task.context) addSection('Contesto', `<p>${escapeHtml(task.context)}</p>`);
     }
 
     /**

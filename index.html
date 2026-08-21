@@ -81,22 +81,23 @@
             <!-- Sezione bottoni -->
             <section class="buttons-section" aria-labelledby="actions-label">
                 <h2 id="actions-label" class="visually-hidden">Azioni disponibili</h2>
-                <div id="button-container" role="group"></div>
+                <div id="category-tabs" class="category-tabs" role="tablist" aria-label="Categoria di prompt"></div>
+                <div id="button-container" role="tabpanel" aria-live="polite"></div>
             </section>
 
             <!-- Sezione risultato -->
             <section class="result-section" aria-labelledby="result-label">
                 <div class="form-group">
                     <div class="result-header">
-                        <label for="Risultato" id="result-label" class="form-label mb-0">
+                        <span id="result-label" class="form-label mb-0">
                             <i class="fas fa-code me-2" aria-hidden="true"></i>
                             Prompt generato
-                        </label>
+                        </span>
                         <div class="result-controls">
                             <div class="form-check form-switch">
-                                <input 
-                                    type="checkbox" 
-                                    class="form-check-input" 
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
                                     id="toggleNewlines"
                                     role="switch"
                                     aria-label="Mantieni interruzioni di riga nel testo">
@@ -105,23 +106,33 @@
                                     <span class="d-md-none">A capo</span>
                                 </label>
                             </div>
-                            <button 
-                                id="copia" 
-                                class="btn btn-secondary"
+                            <button
+                                id="copia"
+                                class="btn btn-primary"
                                 aria-label="Copia il prompt negli appunti">
                                 <i class="fas fa-clone me-1" aria-hidden="true"></i>
                                 <span class="d-none d-sm-inline">Copia</span>
                             </button>
                         </div>
                     </div>
-                    <textarea 
-                        class="form-control" 
-                        id="Risultato" 
-                        rows="15" 
-                        readonly
+
+                    <div
+                        id="risultatoPreview"
+                        class="risultato-preview"
                         aria-live="polite"
-                        aria-atomic="true"
-                        placeholder="Il prompt generato apparirà qui..."></textarea>
+                        aria-atomic="true">
+                        <p class="risultato-empty text-muted">Il prompt generato apparirà qui...</p>
+                    </div>
+
+                    <details class="raw-result-details">
+                        <summary>Testo grezzo (per modifiche manuali prima della copia)</summary>
+                        <textarea
+                            class="form-control"
+                            id="Risultato"
+                            rows="12"
+                            readonly
+                            placeholder="Il prompt generato apparirà qui..."></textarea>
+                    </details>
                 </div>
             </section>
         </main>

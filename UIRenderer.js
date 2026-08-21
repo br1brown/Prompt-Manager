@@ -1,35 +1,68 @@
-
 import { config } from './config.js';
 
+// Etichetta del bottone considerato la scelta di default a basso sforzo decisionale
+const DEFAULT_LABEL = "Armonizza";
+
 /**
- * Classe per il rendering dell'interfaccia utente
+ * Classe per il rendering dell'interfaccia utente.
+ * Mostra una categoria di prompt alla volta (tab), per ridurre il numero
+ * di scelte simultanee mostrate all'utente (legge di Hick).
  */
 export class UIRenderer {
+    constructor() {
+        this.activeCategory = Object.keys(config)[0];
+    }
+
     /**
-     * Renderizza i bottoni dell'interfaccia
+     * Renderizza tab di categoria e bottoni della categoria attiva
      */
     renderButtons() {
-        const buttonContainer = $("#button-container").empty();
+        this.renderTabs();
+        this.renderCategoryButtons();
+    }
+
+    /**
+     * Renderizza i tab di selezione categoria
+     */
+    renderTabs() {
+        const tabsContainer = $('#category-tabs').empty();
 
         Object.keys(config).forEach(type => {
-            const section = $('<div class="mb-4"></div>');
-            const title = $(`<h5 class="category-title">${type}</h5>`);
-            const buttonRow = $('<div class="d-flex flex-wrap"></div>');
-
-            config[type].forEach((item, index) => {
-                const button = $(`
-                    <button class="btn btn-dark bottone m-2" type="button" 
-                            data-label="${item.label}" 
-                            data-type="${type}" 
-                            data-index="${index}">
-                        ${item.label}
-                    </button>
-                `);
-                buttonRow.append(button);
+            const isActive = type === this.activeCategory;
+            const tab = $(`
+                <button type="button" class="tab-btn ${isActive ? 'active' : ''}"
+                        role="tab" aria-selected="${isActive}" aria-controls="button-container">
+                    ${type}
+                </button>
+            `);
+            tab.on('click', () => {
+                this.activeCategory = type;
+                this.renderButtons();
             });
-
-            section.append(title, buttonRow);
-            buttonContainer.append(section);
+            tabsContainer.append(tab);
         });
+    }
+
+    /**
+     * Renderizza i bottoni della categoria attualmente selezionata
+     */
+    renderCategoryButtons() {
+        const buttonContainer = $('#button-container').empty();
+        const buttonRow = $('<div class="d-flex flex-wrap"></div>');
+
+        config[this.activeCategory].forEach((item, index) => {
+            const isDefault = item.label === DEFAULT_LABEL;
+            const button = $(`
+                <button class="btn ${isDefault ? 'btn-primary' : 'btn-dark'} bottone m-2" type="button"
+                        data-label="${item.label}"
+                        data-type="${this.activeCategory}"
+                        data-index="${index}">
+                    ${item.label}
+                </button>
+            `);
+            buttonRow.append(button);
+        });
+
+        buttonContainer.append(buttonRow);
     }
 }

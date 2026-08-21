@@ -92,20 +92,39 @@ export class EventManager {
             // Rileva se siamo su mobile
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+            // L'AI usata l'ultima volta va per prima ed evidenziata: la scelta tra
+            // 10 servizi equivalenti si riduce a "quello di sempre + altri"
+            // (legge di Tesler: la complessità non sparisce, si sposta dall'utente al sistema)
+            const lastUsedAI = localStorage.getItem('lastUsedAI');
+            const orderedLinks = [...linkAI].sort((a, b) => {
+                if (a.nome === lastUsedAI) return -1;
+                if (b.nome === lastUsedAI) return 1;
+                return 0;
+            });
+
             Swal.fire({
                 title: "Testo copiato!",
                 icon: "success",
                 showCloseButton: false,
                 showCancelButton: false,
                 showConfirmButton: false,
-                html: linkAI.map(link => {
+                html: orderedLinks.map(link => {
                     // Se siamo su mobile e c'è un URL app, usa quello, altrimenti usa il web
                     const url = (isMobile && link.app) ? link.app : link.url;
                     // Se non c'è app su mobile e link.app è esplicitamente null, salta questo link
                     if (isMobile && link.app === null) return '';
 
-                    return `<a href="${url}" target="_blank" class="m-1 btn btn-sm btn-dark">${link.nome}</a>`;
-                }).filter(Boolean).join('')
+                    const isLastUsed = link.nome === lastUsedAI;
+                    const style = isLastUsed ? 'btn-primary' : 'btn-dark';
+                    const star = isLastUsed ? '<i class="fas fa-star me-1" aria-hidden="true"></i>' : '';
+
+                    return `<a href="${url}" target="_blank" class="m-1 btn btn-sm ${style} ai-link" data-nome="${link.nome}">${star}${link.nome}</a>`;
+                }).filter(Boolean).join(''),
+                didOpen: () => {
+                    $('.ai-link').on('click', function () {
+                        localStorage.setItem('lastUsedAI', $(this).data('nome'));
+                    });
+                }
             });
         }).catch(() => {
             this.modalManager.showError("Errore", "Impossibile copiare il testo");
