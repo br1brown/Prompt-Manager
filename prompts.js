@@ -5,13 +5,47 @@ function formattaSource(keepNewlines, sorgente = "") {
     return keepNewlines ? `\n------\n${sorgente}\n------` : `"${sorgente}"`;
 }
 
-const COMMON_WARNINGS = [];
+// Lessico vietato: parole/espressioni tipiche della scrittura AI
+// (categorie da Wikipedia:Signs_of_AI_writing, adattate all'italiano)
+const LESSICO_VIETATO = [
+    // Riempitivi e intensificatori
+    "può", "potrebbe", "solo", "molto", "davvero", "letteralmente", "effettivamente", "certamente", "probabilmente", "fondamentalmente",
+    // "Vocabolario AI" (verbi/sostantivi ricorrenti)
+    "approfondire", "intraprendere", "illuminante", "stimato", "fare luce", "creare", "immaginare", "regno", "rivoluzionario", "sbloccare",
+    "scoprire", "alle stelle", "abisso", "non sei solo", "in un mondo dove", "rivoluzionare", "dirompente", "utilizzare", "tuffarsi",
+    "arazzo", "illuminare", "svelare", "cruciale", "intricato", "chiarire", "quindi", "inoltre", "tuttavia", "sfruttare", "entusiasmante",
+    "innovativo", "all'avanguardia", "notevole", "resta da vedere", "scorcio", "navigare", "paesaggio", "crudo", "testimonianza",
+    "riassumendo", "in sintesi", "potenziare", "vertiginoso", "aprire", "potente", "richieste", "in continua evoluzione",
+    // Enfasi indebita su importanza/eredità
+    "fondamentale", "svolta", "punto di svolta", "segna un momento", "gioca un ruolo chiave", "pietra miliare",
+    // Tono promozionale / da guida turistica
+    "vivace", "ricco patrimonio", "vanta", "eccellenza", "d'avanguardia", "rinomato", "impegno verso",
+    // Connettori vaghi al posto di preposizioni dirette
+    "in relazione a", "in associazione con"
+].join(", ");
+
+// Vincoli e avvertenze comuni a tutte le armonizzazioni (indipendenti dal tono)
+const CONSTRAINTS_BASE = [
+    "Conserva riferimenti ed esempi se presenti",
+    "Mantieni il significato originale",
+    "Ottimizzare solo la struttura senza alterare il messaggio",
+    "Nessun trattino (—, --, –) usato come inciso",
+    "Non sostituire 'è/sono' con perifrasi come 'rappresenta', 'si configura come', 'funge da' quando l'originale usa la forma semplice"
+];
+
+const WARNINGS_BASE = [
+    "Usa solo paragrafi; al loro interno niente grassetti, corsivi o elenchi",
+    "Non usare il Lessico vietato nemmeno come sinonimi indiretti, a meno che non siano già nel testo originale",
+    "Non introdurre strutture tipo 'non solo… ma anche…' se non già presenti nel testo",
+    "Non introdurre attribuzioni vaghe (es. 'gli esperti sostengono', 'si osserva che') se non presenti nella fonte",
+    "Non aggiungere triadi retoriche (liste di tre elementi) assenti nel testo originale",
+    "Non chiudere con formule generiche tipo 'nonostante le sfide, il futuro è promettente'",
+    "Non aggiungere frasi gerundive di commento vuoto (es. 'sottolineando/evidenziando l'importanza di...') assenti nell'originale"
+];
 
 // Funzione base per armonizzazione
 const armonizzazioneBase = (keepNewlines, source, toneofvoice) => {
     const formattedSource = formattaSource(keepNewlines, source);
-
-    const LESSICO_VIETATO = "può, potrebbe, solo, molto, davvero, letteralmente, effettivamente, certamente, probabilmente, fondamentalmente, approfondire, intraprendere, illuminante, stimato, fare luce, creare, immaginare, regno, rivoluzionario, sbloccare, scoprire, alle stelle, abisso, non sei solo, in un mondo dove, rivoluzionare, dirompente, utilizzare, tuffarsi, arazzo, illuminare, svelare, cruciale, intricato, chiarire, quindi, inoltre, tuttavia, sfruttare, entusiasmante, innovativo, all\'avanguardia, notevole, resta da vedere, scorcio, navigare, paesaggio, crudo, testimonianza, riassumendo, in sintesi, potenziare, vertiginoso, aprire, potente, richieste, in continua evoluzione";
 
     return {
         objective: `Armonizza il seguente testo eliminando ripetizioni semantiche e rendendolo più scorrevole, senza alterarne il significato: ${formattedSource}`,
@@ -20,17 +54,10 @@ const armonizzazioneBase = (keepNewlines, source, toneofvoice) => {
 
         constraints: [
             `IMPORTANTE: Il tono è ${toneofvoice}`,
-            "Conserva riferimenti ed esempi se presenti",
-            "Mantieni il significato originale",
-            "Ottimizzare solo la struttura senza alterare il messaggio",
-            "Nessun trattino (—, --, –) usato come inciso"
+            ...CONSTRAINTS_BASE
         ],
 
-        warnings: [
-            "Usa solo paragrafi; al loro interno niente grassetti, corsivi o elenchi",
-            "Non usare il Lessico vietato nemmeno come sinonimi indiretti, a meno che non siano già nel testo originale",
-            "Non introdurre strutture tipo 'non solo… ma anche…' se non già presenti nel testo"
-        ],
+        warnings: WARNINGS_BASE,
 
         context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.\n\n**Lessico vietato (case-insensitive):** ${LESSICO_VIETATO}`
     };
