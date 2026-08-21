@@ -396,8 +396,8 @@ textarea {
     left: 1px;
     right: 1px;
     bottom: 1px;
-    height: 3.5rem;
-    background: linear-gradient(to bottom, transparent, var(--result-bg) 85%);
+    height: 6rem;
+    background: linear-gradient(to bottom, transparent, var(--result-bg) 70%);
     pointer-events: none;
     border-radius: 0 0 var(--radius) var(--radius);
 }
