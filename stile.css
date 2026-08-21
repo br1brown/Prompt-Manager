@@ -930,6 +930,14 @@ body.meme-mode .container {
     pointer-events: none;
     z-index: 30;
     overflow: hidden;
+    transition: opacity var(--transition-base);
+}
+
+/* Mentre il finto popup di sistema è aperto, le didascalie si mettono
+   in pausa: evita che finiscano visivamente sopra il popup (il layer
+   animato può finire sopra lo z-index più alto del dialog) */
+.meme-caption-layer.meme-caption-suppressed {
+    opacity: 0;
 }
 
 body.meme-mode .meme-caption-layer {
