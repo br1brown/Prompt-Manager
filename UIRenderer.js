@@ -48,22 +48,28 @@ export class UIRenderer {
      */
     renderCategoryButtons() {
         const buttonContainer = $('#button-container').empty();
-        // Lo spazio tra i bottoni è dato solo dal "gap" della grid (stile.css):
-        // niente margini sui singoli bottoni, altrimenti si sommano al gap
-        // e la spaziatura diventa irregolare, soprattutto ai bordi.
-        const buttonRow = $('<div class="d-flex flex-wrap"></div>');
+        // Griglia responsive di Bootstrap: ogni bottone in una .col dentro
+        // una .row con row-cols-*, che si occupa da sola di quante colonne
+        // stare per riga a seconda della larghezza (niente più CSS grid custom).
+        const buttonRow = $('<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-2"></div>');
 
         config[this.activeCategory].forEach((item, index) => {
             const isDefault = item.label === DEFAULT_LABEL;
+            // d-flex sulla colonna fa sì che il bottone si estenda per
+            // tutta l'altezza della riga (le .col sono già alte uguali
+            // di default in una .row Bootstrap), altrimenti chi ha
+            // un'etichetta corta resterebbe più basso di chi va a due righe
+            const col = $('<div class="col d-flex"></div>');
             const button = $(`
-                <button class="btn ${isDefault ? 'btn-primary' : 'btn-dark'} bottone" type="button"
+                <button class="btn ${isDefault ? 'btn-primary' : 'btn-dark'} bottone w-100" type="button"
                         data-label="${item.label}"
                         data-type="${this.activeCategory}"
                         data-index="${index}">
                     ${item.label}
                 </button>
             `);
-            buttonRow.append(button);
+            col.append(button);
+            buttonRow.append(col);
         });
 
         buttonContainer.append(buttonRow);
