@@ -123,10 +123,10 @@ export class EventManager {
                 showCancelButton: false,
                 showConfirmButton: false,
                 html: orderedLinks.map(link => {
-                    // Se siamo su mobile e c'è un URL app, usa quello, altrimenti usa il web
+                    // Se siamo su mobile e c'è un deep link app, usa quello; altrimenti
+                    // il sito web va comunque bene anche da mobile, quindi nessun
+                    // servizio senza deep link va nascosto dalla lista
                     const url = (isMobile && link.app) ? link.app : link.url;
-                    // Se non c'è app su mobile e link.app è esplicitamente null, salta questo link
-                    if (isMobile && link.app === null) return '';
 
                     const isLastUsed = link.nome === lastUsedAI;
                     const style = isLastUsed ? 'btn-primary' : 'btn-dark';
