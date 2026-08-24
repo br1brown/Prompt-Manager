@@ -1,7 +1,12 @@
+// prefillUrl: solo per i servizi con un parametro di query per
+// prevalorizzare il prompt confermato e ancora attivo (lo stesso usato
+// per impostarli come motore di ricerca del browser). Claude l'aveva
+// (claude.ai/new?q=) ma Anthropic l'ha rimosso a ottobre 2025 per motivi
+// di sicurezza; Gemini non l'ha mai avuto. Meglio ometterlo che indovinare.
 export const linkAI = [
     { nome: "Claude", url: "https://claude.ai/new", app: "claude://chat" },
-    { nome: "ChatGPT", url: "https://chatgpt.com/", app: "chatgpt://" },
-    { nome: "Perplexity", url: "https://www.perplexity.ai", app: "perplexity://" },
+    { nome: "ChatGPT", url: "https://chatgpt.com/", app: "chatgpt://", prefillUrl: "https://chatgpt.com/?q={q}" },
+    { nome: "Perplexity", url: "https://www.perplexity.ai", app: "perplexity://", prefillUrl: "https://www.perplexity.ai/search?q={q}" },
     { nome: "DeepSeek", url: "https://chat.deepseek.com/", app: "deepseek://" },
     { nome: "Copilot", url: "https://copilot.microsoft.com/", app: "ms-copilot://" },
     // Grok è un'app standalone dal 2025 (prima solo dentro X): niente deep
