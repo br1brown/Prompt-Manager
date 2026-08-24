@@ -52,12 +52,13 @@ function costruisciCriteri(escludiCriteri = [], criteriExtra = []) {
     ];
 }
 
-// Eccezioni ai criteri comuni, per profilo: qui un tono dichiara solo cosa
-// lo rende diverso dal comportamento di default, non l'intero prompt da
-// zero. Un profilo assente da questa mappa (o un tono personalizzato scritto
-// a mano) usa il set comune così com'è: aggiungere un nuovo tono in
-// toneProfiles.js non richiede nessuna modifica qui, a meno che quel tono
-// non abbia davvero bisogno di una sua eccezione.
+// Eccezioni ai criteri/esempi comuni, per profilo: qui un tono dichiara solo
+// cosa lo rende diverso dal comportamento di default (escludiCriteri,
+// criteriExtra, esempiExtra), non l'intero prompt da zero. Un profilo
+// assente da questa mappa (o un tono personalizzato scritto a mano) usa il
+// set comune così com'è: aggiungere un nuovo tono in toneProfiles.js non
+// richiede nessuna modifica qui, a meno che quel tono non abbia davvero
+// bisogno di una sua eccezione.
 const ECCEZIONI_TONO = {
     "Schierato Fortissimo": {
         escludiCriteri: ["triadi-retoriche"],
@@ -69,6 +70,31 @@ const ECCEZIONI_TONO = {
         escludiCriteri: ["ritmo-frasi"],
         criteriExtra: [
             { regola: "Frasi anche tutte molto brevi vanno bene: è il ritmo naturale di una chat, non un difetto da correggere" }
+        ]
+    },
+    // Dalla style guide dell'autore. Presa solo la parte di voce/metodo
+    // applicabile ad "armonizza un testo esistente senza aggiungerne il
+    // contenuto": la struttura dell'episodio (apertura/sigla/chiusura) e
+    // il parallelo storico ricorrente restano fuori, perché richiederebbero
+    // di aggiungere materiale assente dal source, non solo di riformularlo
+    "alla 'Occhio al mondo'": {
+        criteriExtra: [
+            {
+                regola: "Quando nel testo compare un'interpretazione o una posizione, dichiarala esplicitamente come tale (es. 'questa è una mia lettura', 'non sto dicendo che X, sto dicendo che...'), distinguendola da ciò che è un fatto verificato",
+                perche: "è la cifra distintiva del tono: prendere posizione senza mai far passare un'opinione per un dato di fatto"
+            },
+            {
+                regola: "Se il source riporta già numeri o date precisi, mantienili esatti invece di genericizzarli (mai 'recentemente' o 'molte persone' al posto di un dato preciso già presente); se il source stesso è vago, non inventare una precisione che non c'è",
+                perche: "il tono rifiuta le formule vaghe quando un dato preciso è disponibile, ma inventarne uno violerebbe la fedeltà al testo originale"
+            },
+            { regola: "Rivolgiti direttamente a chi legge, in seconda persona, quando il registro del testo lo permette" },
+            { regola: "Le domande retoriche usate come cerniera tra un blocco e l'altro sono benvenute" }
+        ],
+        esempiExtra: [
+            {
+                input: "Le aziende hanno ridotto le tutele sulla privacy. È una scelta pericolosa.",
+                output: "Le aziende hanno ridotto le tutele sulla privacy: questo è un fatto verificabile. Quello che segue è la mia lettura, dichiarata come tale: è una scelta pericolosa."
+            }
         ]
     }
 };
@@ -102,7 +128,7 @@ const armonizzazioneBase = (keepNewlines, source, toneofvoice, eccezioni = {}) =
 
     context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.`,
 
-    examples: EXAMPLES,
+    examples: [...EXAMPLES, ...(eccezioni.esempiExtra || [])],
 
     criteri: costruisciCriteri(eccezioni.escludiCriteri, eccezioni.criteriExtra),
 
