@@ -23,15 +23,31 @@ const CRITERI_BASE = [
     { regola: "Ottimizza solo la struttura, mai il messaggio" },
     { regola: "Usa solo paragrafi continui: niente grassetti, corsivi o elenchi puntati" },
     {
+        regola: "Alterna la lunghezza delle frasi: non più di due o tre frasi consecutive di lunghezza e struttura simili",
+        perche: "il ritmo uniforme (bassa 'burstiness') è il segnale più affidabile con cui lettori e rilevatori riconoscono un testo generato da un'AI, più delle singole parole usate"
+    },
+    {
         regola: `Non introdurre, se assenti nell'originale: ${TIC_AI.join("; ")}`,
         perche: "sono i tic più riconoscibili della scrittura AI, rari nel parlato o scritto umano naturale: introdurli è il modo più rapido per tradire un testo generato"
     }
 ];
 
+// Tre esempi, ciascuno mirato a un criterio diverso: un modello generalizza
+// meglio imitando casi vari che applicando una regola astratta. In ordine
+// di difficoltà crescente (l'ultimo, il più sottile, resta più fresco in
+// memoria: i modelli pesano di più ciò che leggono per ultimo)
 const EXAMPLES = [
     {
         input: "Il prodotto è molto innovativo. È un prodotto che rappresenta una svolta ed è, allo stesso tempo, all'avanguardia rispetto alla concorrenza.",
         output: "Il prodotto è innovativo e supera nettamente la concorrenza."
+    },
+    {
+        input: "L'azienda ha annunciato il nuovo prodotto. Il prodotto introduce diverse funzionalità utili. Gli utenti possono personalizzare l'interfaccia. Le prime recensioni sono positive.",
+        output: "L'azienda ha annunciato il nuovo prodotto, che introduce diverse funzionalità utili e permette agli utenti di personalizzare l'interfaccia. Le prime recensioni sono positive."
+    },
+    {
+        input: "Dopo un'attenta analisi del testo, si può notare che il fatturato è cresciuto del 12% rispetto all'anno precedente.",
+        output: "Il fatturato è cresciuto del 12% rispetto all'anno precedente."
     }
 ];
 

@@ -25,5 +25,12 @@ export const PATTERN_SCRITTURA_AI = [
     {
         categoria: "connettori vaghi al posto di preposizioni dirette",
         esempi: "in relazione a, in associazione con"
+    },
+    // Categoria aggiunta a Wikipedia:Signs of AI writing nel 2026: il testo
+    // racconta il processo che l'ha prodotto invece di affermare il fatto
+    // direttamente - lo fa chi ha appena "letto" la fonte, non chi la conosce
+    {
+        categoria: "narrazione del processo invece del risultato",
+        esempi: "dopo un'attenta analisi risulta che, un esame del testo mostra che, a uno sguardo più attento si nota che"
     }
 ];

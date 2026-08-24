@@ -14,6 +14,10 @@ export const revisione = [
                 {
                     input: "quindi oggi vi parlo di un argomento che mi sta molto a cuore che è quello dell intelligenza artificiale",
                     output: "Quindi oggi vi parlo di un argomento che mi sta molto a cuore, che è quello dell'intelligenza artificiale."
+                },
+                {
+                    input: "poi abbiamo fatto due prove la prima e andata bene la seconda un po meno",
+                    output: "Poi abbiamo fatto due prove: la prima è andata bene, la seconda un po' meno."
                 }
             ],
 
@@ -38,6 +42,18 @@ export const revisione = [
             context: `Analisi e correzione di eventuali errori fattuali, per garantire informazioni accurate senza alterare il significato originale.`,
 
             metodo: `Per ciascuna affermazione verificabile nel testo, valutala singolarmente: individuala, verificala con fonti autorevoli, poi decidi se merita una segnalazione. Non mostrare questo processo nella risposta finale: nella risposta compaiono solo i blocchi <correzione>, o l'esito "nessun errore riscontrato".`,
+
+            examples: [
+                {
+                    input: "La Torre Eiffel è stata completata nel 1900.",
+                    output: `<correzione>
+<testo_originale>La Torre Eiffel è stata completata nel 1900.</testo_originale>
+<errore>La Torre Eiffel è stata completata nel 1889, non nel 1900.</errore>
+<fonti>https://www.toureiffel.paris/en/the-monument/history (sito ufficiale della Tour Eiffel)</fonti>
+<testo_corretto>La Torre Eiffel è stata completata nel 1889.</testo_corretto>
+</correzione>`
+                }
+            ],
 
             criteri: [
                 { regola: "Verifica solo fatti oggettivi, non opinioni" },
