@@ -11,18 +11,21 @@ export function formattaSource(keepNewlines, sorgente = "") {
 
 /**
  * Crea un task-prompt con una forma coerente, pensata per essere
- * serializzata a tag XML (best practice 2026 per prompt strutturati:
- * dati e istruzioni separati, mai testo libero concatenato):
+ * serializzata a tag XML (dati e istruzioni separati, mai testo libero
+ * concatenato — è la struttura che i modelli attuali seguono in modo più
+ * affidabile su prompt complessi):
  *
- *   - source: il materiale su cui lavorare (va in <source>, mai fuso nell'objective)
- *   - objective: l'istruzione, scritta per riferirsi al tag <source>
+ *   - source: il materiale su cui lavorare (va in <source>, mai fuso nel task)
+ *   - task: l'istruzione operativa, scritta per riferirsi al tag <source>
+ *   - voice: il tono di voce richiesto, quando pertinente (sezione propria,
+ *     non un vincolo tra gli altri: è l'unica cosa che l'utente sceglie a mano)
  *   - context: informazioni di sfondo utili all'esecuzione
  *   - examples: coppie { input, output } few-shot (0-3, facoltative)
- *   - constraints / warnings: regole positive e negative
- *   - output: lo schema/formato atteso della risposta
+ *   - constraints / warnings: regole da rispettare e pattern da evitare
+ *   - outputFormat: lo schema/formato atteso della risposta
  *
  * Unico punto da estendere se in futuro serve un nuovo campo comune.
  */
-export function creaTask({ objective, source, output, constraints = [], warnings = [], context, examples = [] } = {}) {
-    return { objective, source, output, constraints, warnings, context, examples };
+export function creaTask({ task, source, voice, outputFormat, constraints = [], warnings = [], context, examples = [] } = {}) {
+    return { task, source, voice, outputFormat, constraints, warnings, context, examples };
 }

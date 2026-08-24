@@ -1,8 +1,8 @@
 import { formattaSource, creaTask } from '../promptFactory.js';
-import { LESSICO_VIETATO } from '../data/lessico.js';
+import { PATTERN_SCRITTURA_AI } from '../data/patternScritturaAI.js';
 import { toneProfiles } from '../data/toneProfiles.js';
 
-// Vincoli e avvertenze comuni a tutte le armonizzazioni (indipendenti dal tono)
+// Vincoli comuni a tutte le armonizzazioni (indipendenti dal tono)
 const CONSTRAINTS_BASE = [
     "Conserva riferimenti ed esempi se presenti",
     "Mantieni il significato originale",
@@ -11,9 +11,15 @@ const CONSTRAINTS_BASE = [
     "Non sostituire 'è/sono' con perifrasi come 'rappresenta', 'si configura come', 'funge da' quando l'originale usa la forma semplice"
 ];
 
+// Pattern da evitare, descritti per categoria (mantienili solo se già
+// presenti nel testo originale: qui si vieta solo l'introduzione ex novo)
+const evitaPatternAI = PATTERN_SCRITTURA_AI
+    .map(p => `${p.categoria} (es. ${p.esempi})`)
+    .join("; ");
+
 const WARNINGS_BASE = [
     "Usa solo paragrafi; al loro interno niente grassetti, corsivi o elenchi",
-    "Non usare il Lessico vietato nemmeno come sinonimi indiretti, a meno che non siano già nel testo originale",
+    `Evita questi pattern tipici della scrittura AI, a meno che non siano già nel testo originale: ${evitaPatternAI}`,
     "Non introdurre strutture tipo 'non solo… ma anche…' se non già presenti nel testo",
     "Non introdurre attribuzioni vaghe (es. 'gli esperti sostengono', 'si osserva che') se non presenti nella fonte",
     "Non aggiungere triadi retoriche (liste di tre elementi) assenti nel testo originale",
@@ -31,22 +37,21 @@ const EXAMPLES = [
 // Funzione base per armonizzazione
 const armonizzazioneBase = (keepNewlines, source, toneofvoice) => {
     return creaTask({
-        objective: `Armonizza il testo racchiuso nel tag <source>: elimina le ripetizioni semantiche e rendilo più scorrevole, senza alterarne il significato.`,
+        task: `Armonizza il testo racchiuso nel tag <source>: elimina le ripetizioni semantiche e rendilo più scorrevole, senza alterarne il significato.`,
 
         source: formattaSource(keepNewlines, source),
 
-        output: `Testo armonizzato (nient’altro)`,
+        voice: toneofvoice,
 
-        constraints: [
-            `IMPORTANTE: Il tono è ${toneofvoice}`,
-            ...CONSTRAINTS_BASE
-        ],
+        outputFormat: `Testo armonizzato (nient’altro)`,
+
+        constraints: CONSTRAINTS_BASE,
 
         warnings: WARNINGS_BASE,
 
         examples: EXAMPLES,
 
-        context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.\n\n**Lessico vietato (case-insensitive):** ${LESSICO_VIETATO}`
+        context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.`
     });
 };
 

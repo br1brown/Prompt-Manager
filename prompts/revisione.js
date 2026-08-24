@@ -4,7 +4,7 @@ export const revisione = [
     {
         label: "Correzione Sottotitoli",
         func: (keepNewlines, source) => creaTask({
-            objective: `Correggi esclusivamente gli errori grammaticali dovuti a trascrizioni errate e i problemi di punteggiatura nel testo racchiuso nel tag <source>.`,
+            task: `Correggi esclusivamente gli errori grammaticali dovuti a trascrizioni errate e i problemi di punteggiatura nel testo racchiuso nel tag <source>.`,
 
             source: formattaSource(keepNewlines, source),
 
@@ -33,15 +33,20 @@ export const revisione = [
     {
         label: "Controllo Accuratezza",
         func: (keepNewlines, source) => creaTask({
-            objective: `Verifica tramite internet l'accuratezza delle informazioni nel testo racchiuso nel tag <source>. Mostra solo gli errori e le inesattezze da correggere, supportate da fonti affidabili.`,
+            task: `Verifica tramite internet l'accuratezza delle informazioni nel testo racchiuso nel tag <source>. Segnala solo gli errori e le inesattezze, supportati da fonti affidabili.`,
 
             source: formattaSource(keepNewlines, source),
 
-            output: `---
-Testo originale
-[Spiegazione dell'errore], Fonti
-Testo corretto proposto
----`,
+            outputFormat: `Restituisci un blocco <correzione> per ogni errore trovato, in questo schema:
+
+<correzione>
+<testo_originale>frase esatta tratta dal source</testo_originale>
+<errore>spiegazione dell'inesattezza</errore>
+<fonti>link alle fonti usate per la verifica</fonti>
+<testo_corretto>proposta di correzione</testo_corretto>
+</correzione>
+
+Se non trovi errori, rispondi solo con: nessun errore riscontrato.`,
 
             constraints: [
                 "Verifica solo fatti oggettivi",

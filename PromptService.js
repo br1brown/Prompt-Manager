@@ -55,12 +55,16 @@ export class PromptService {
      * libero. Ordine: il materiale sorgente per primo (i documenti lunghi
      * vanno letti prima della richiesta), le istruzioni operative alla
      * fine, così il modello le legge per ultime, subito prima di rispondere.
+     * La verifica finale è generata qui, non nei singoli prompt: è un
+     * passaggio trasversale a ogni task che ha regole da rispettare, non
+     * una regola specifica di un task.
      */
     formatPromptResult(task) {
         if (!task) return "Nessun task fornito.";
 
         const section = (tag, content) => content ? `<${tag}>\n${content}\n</${tag}>` : null;
         const list = (items) => items.map(item => `- ${item}`).join("\n");
+        const hasRules = (task.constraints?.length > 0) || (task.warnings?.length > 0);
 
         const examplesBlock = Array.isArray(task.examples) && task.examples.length > 0
             ? task.examples.map(ex =>
@@ -70,14 +74,14 @@ export class PromptService {
 
         const parts = [
             section("source", task.source),
-            section("task", task.objective),
+            section("task", task.task),
+            section("voice", task.voice),
             section("context", task.context),
             section("examples", examplesBlock),
-            Array.isArray(task.constraints) && task.constraints.length > 0
-                ? section("constraints", list(task.constraints)) : null,
-            Array.isArray(task.warnings) && task.warnings.length > 0
-                ? section("warnings", list(task.warnings)) : null,
-            section("output_format", task.output)
+            task.constraints?.length > 0 ? section("constraints", list(task.constraints)) : null,
+            task.warnings?.length > 0 ? section("warnings", list(task.warnings)) : null,
+            hasRules ? section("final_check", "Prima di rispondere, ricontrolla il risultato rispetto a tutti i vincoli e le avvertenze sopra: correggi in silenzio ogni violazione, senza commentarla.") : null,
+            section("output_format", task.outputFormat)
         ].filter(Boolean);
 
         return parts.length > 0 ? parts.join("\n\n") : "Nessun dato disponibile per questo task.";
