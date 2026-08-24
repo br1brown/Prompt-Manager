@@ -75,9 +75,18 @@ export class PromptService {
 
         // Ogni criterio è una condizione di successo verificabile; il
         // "perché" compare solo dove è stato scritto, non è un campo
-        // obbligatorio (evita di spiegare l'ovvio a ogni riga)
+        // obbligatorio (evita di spiegare l'ovvio a ogni riga).
+        //
+        // Quando il task ha anche un tono (<voice>), i criteri qui sotto
+        // sono la norma generale, non un vincolo assoluto: un tono scritto
+        // a mano (bottone "Personalizzata") non può avere le eccezioni
+        // dedicate che i profili fissi hanno in ECCEZIONI_TONO
+        // (armonizzazione.js), quindi il modello deve poter arbitrare da
+        // solo un conflitto reale invece di applicare la regola alla
+        // lettera contro l'intento esplicito dell'utente.
         const criteriBlock = task.criteri?.length > 0
-            ? task.criteri.map(c => c.perche ? `- ${c.regola} (perché: ${c.perche})` : `- ${c.regola}`).join("\n")
+            ? (task.voice ? "Se il tono richiesto in <voice> confligge con una di queste regole, il tono ha la priorità: i criteri restano la norma, il tono è l'eccezione dichiarata.\n\n" : "")
+                + task.criteri.map(c => c.perche ? `- ${c.regola} (perché: ${c.perche})` : `- ${c.regola}`).join("\n")
             : null;
 
         const parts = [
