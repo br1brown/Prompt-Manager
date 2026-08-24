@@ -18,14 +18,22 @@ const TIC_AI = [
 ];
 
 // Criteri di successo comuni a tutte le armonizzazioni, prima di eventuali
-// eccezioni di tono. Anche questi hanno un id per lo stesso motivo.
+// eccezioni di tono. Ognuno ha un "livello":
+//   - "fedelta": vincoli sul contenuto, mai negoziabili con nessun tono
+//     (non è una preferenza stilistica: è il confine stesso del task,
+//     "riformula senza alterare")
+//   - "stile": regole sul "come", dove un tono esplicito può avere la
+//     priorità se confligge (vedi ECCEZIONI_TONO e PromptService)
+// Anche questi hanno un id, per permettere a un tono di escluderne uno
+// specifico senza riscrivere l'intera lista.
 const CRITERI_BASE = [
-    { id: "conserva-riferimenti", regola: "Conserva riferimenti ed esempi se presenti" },
-    { id: "mantieni-significato", regola: "Mantieni il significato originale" },
-    { id: "solo-struttura", regola: "Ottimizza solo la struttura, mai il messaggio" },
-    { id: "solo-paragrafi", regola: "Usa solo paragrafi continui: niente grassetti, corsivi o elenchi puntati" },
+    { id: "conserva-riferimenti", livello: "fedelta", regola: "Conserva riferimenti ed esempi se presenti" },
+    { id: "mantieni-significato", livello: "fedelta", regola: "Mantieni il significato originale" },
+    { id: "solo-struttura", livello: "fedelta", regola: "Ottimizza solo la struttura, mai il messaggio" },
+    { id: "solo-paragrafi", livello: "fedelta", regola: "Usa solo paragrafi continui: niente grassetti, corsivi o elenchi puntati" },
     {
         id: "ritmo-frasi",
+        livello: "stile",
         regola: "Alterna la lunghezza delle frasi: non più di due o tre frasi consecutive di lunghezza e struttura simili",
         perche: "il ritmo uniforme (bassa 'burstiness') è il segnale più affidabile con cui lettori e rilevatori riconoscono un testo generato da un'AI, più delle singole parole usate"
     }
@@ -34,13 +42,15 @@ const CRITERI_BASE = [
 /**
  * Costruisce i criteri per un tono: parte dal set comune, toglie le voci
  * (di CRITERI_BASE o di TIC_AI) che quel tono esclude esplicitamente, e
- * aggiunge le eventuali regole specifiche del tono. Un tono senza
- * eccezioni ottiene semplicemente il set comune per intero: aggiungerne
- * uno nuovo non richiede toccare questa funzione.
+ * aggiunge le eventuali regole specifiche del tono (sempre di livello
+ * "stile": sono già scritte su misura per quel tono, non c'è nulla da
+ * arbitrare). Un tono senza eccezioni ottiene semplicemente il set comune
+ * per intero: aggiungerne uno nuovo non richiede toccare questa funzione.
  */
 function costruisciCriteri(escludiCriteri = [], criteriExtra = []) {
     const ticAttivi = TIC_AI.filter(t => !escludiCriteri.includes(t.id));
     const criterioTic = ticAttivi.length > 0 ? [{
+        livello: "stile",
         regola: `Non introdurre, se assenti nell'originale: ${ticAttivi.map(t => t.testo).join("; ")}`,
         perche: "sono i tic più riconoscibili della scrittura AI, rari nel parlato o scritto umano naturale: introdurli è il modo più rapido per tradire un testo generato"
     }] : [];
@@ -48,7 +58,7 @@ function costruisciCriteri(escludiCriteri = [], criteriExtra = []) {
     return [
         ...CRITERI_BASE.filter(c => !escludiCriteri.includes(c.id)),
         ...criterioTic,
-        ...criteriExtra
+        ...criteriExtra.map(c => ({ livello: "stile", ...c }))
     ];
 }
 

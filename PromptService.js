@@ -77,17 +77,31 @@ export class PromptService {
         // "perché" compare solo dove è stato scritto, non è un campo
         // obbligatorio (evita di spiegare l'ovvio a ogni riga).
         //
-        // Quando il task ha anche un tono (<voice>), i criteri qui sotto
-        // sono la norma generale, non un vincolo assoluto: un tono scritto
-        // a mano (bottone "Personalizzata") non può avere le eccezioni
-        // dedicate che i profili fissi hanno in ECCEZIONI_TONO
-        // (armonizzazione.js), quindi il modello deve poter arbitrare da
-        // solo un conflitto reale invece di applicare la regola alla
-        // lettera contro l'intento esplicito dell'utente.
-        const criteriBlock = task.criteri?.length > 0
-            ? (task.voice ? "Se il tono richiesto in <voice> confligge con una di queste regole, il tono ha la priorità: i criteri restano la norma, il tono è l'eccezione dichiarata.\n\n" : "")
-                + task.criteri.map(c => c.perche ? `- ${c.regola} (perché: ${c.perche})` : `- ${c.regola}`).join("\n")
-            : null;
+        // Un criterio può avere un "livello": "fedelta" (vincolo sul
+        // contenuto, mai negoziabile) o "stile" (regola sul "come", dove un
+        // tono esplicito in <voice> può avere la priorità se confligge). Se
+        // il task usa i livelli, i criteri vengono raggruppati in due blocchi
+        // separati, ciascuno con la propria regola di validità dichiarata:
+        // non è un conflitto da segnalare al modello, è una gerarchia, e
+        // la nota di priorità si applica solo al blocco "stile" - i vincoli
+        // di fedeltà restano assoluti in ogni caso. Un task senza livelli
+        // (es. revisione, che non ha un tono con cui negoziare) ottiene
+        // semplicemente l'elenco piatto di sempre.
+        const bullet = (c) => c.perche ? `- ${c.regola} (perché: ${c.perche})` : `- ${c.regola}`;
+        const usaLivelli = task.criteri?.some(c => c.livello);
+
+        const criteriBlock = !task.criteri?.length ? null
+            : !usaLivelli ? task.criteri.map(bullet).join("\n")
+            : [
+                task.criteri.some(c => c.livello === "fedelta")
+                    ? "Vincoli di fedeltà (sempre validi, nessun tono può derogarvi):\n"
+                        + task.criteri.filter(c => c.livello === "fedelta").map(bullet).join("\n")
+                    : null,
+                task.criteri.some(c => c.livello !== "fedelta")
+                    ? `Criteri di stile (regolano il "come", non il contenuto)${task.voice ? ". Se il tono richiesto in <voice> confligge con uno di questi, il tono ha la priorità" : ""}:\n`
+                        + task.criteri.filter(c => c.livello !== "fedelta").map(bullet).join("\n")
+                    : null
+            ].filter(Boolean).join("\n\n");
 
         const parts = [
             section("source", task.source),
