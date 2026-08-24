@@ -6,6 +6,7 @@ Prova subito l'applicazione: **[Prompt Manager Live](https://br1brown.github.io/
 
 ## 🚀 Caratteristiche
 - **Generazione automatica di prompt** ottimizzati per diversi tipi di contenuto
+- **Output a tag XML** (`<source>`, `<task>`, `<constraints>`, `<examples>`...), lo standard 2026 per prompt strutturati: separa nettamente il testo dell'utente dalle istruzioni, seguito in modo più affidabile dai modelli attuali
 - **Interfaccia responsive** compatibile con dispositivi desktop e mobile
 - **Modalità di tono personalizzabile** con profili predefiniti e toni personalizzati
 - **Supporto per social media** con template specifici per piattaforme

@@ -4,7 +4,9 @@ export const revisione = [
     {
         label: "Correzione Sottotitoli",
         func: (keepNewlines, source) => creaTask({
-            objective: `Correggi esclusivamente gli errori grammaticali dovuti a trascrizioni errate e i problemi di punteggiatura nel seguente testo: ${formattaSource(keepNewlines, source)}`,
+            objective: `Correggi esclusivamente gli errori grammaticali dovuti a trascrizioni errate e i problemi di punteggiatura nel testo racchiuso nel tag <source>.`,
+
+            source: formattaSource(keepNewlines, source),
 
             constraints: [
                 "Il testo deve rimanere fedele all'originale",
@@ -18,13 +20,22 @@ export const revisione = [
                 "Cerca di accorpare parole singole per migliorare la leggibilità"
             ],
 
+            examples: [
+                {
+                    input: "quindi oggi vi parlo di un argomento che mi sta molto a cuore che è quello dell intelligenza artificiale",
+                    output: "Quindi oggi vi parlo di un argomento che mi sta molto a cuore, che è quello dell'intelligenza artificiale."
+                }
+            ],
+
             context: `Revisione minimale dei sottotitoli autogenerati da un video, focalizzandosi esclusivamente sulla correzione di errori grammaticali e punteggiatura. Le modifiche devono essere ridotte al minimo indispensabile, preservando completamente lo stile e il significato originale per garantire una lettura fluida e fedele.`
         })
     },
     {
         label: "Controllo Accuratezza",
         func: (keepNewlines, source) => creaTask({
-            objective: `Verifica tramite internet l'accuratezza delle informazioni nel seguente testo: ${formattaSource(keepNewlines, source)}\nMostra solo gli errori e le inesattezze da correggere solo supportate da fonti affidabili`,
+            objective: `Verifica tramite internet l'accuratezza delle informazioni nel testo racchiuso nel tag <source>. Mostra solo gli errori e le inesattezze da correggere, supportate da fonti affidabili.`,
+
+            source: formattaSource(keepNewlines, source),
 
             output: `---
 Testo originale

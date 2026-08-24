@@ -21,12 +21,19 @@ const WARNINGS_BASE = [
     "Non aggiungere frasi gerundive di commento vuoto (es. 'sottolineando/evidenziando l'importanza di...') assenti nell'originale"
 ];
 
+const EXAMPLES = [
+    {
+        input: "Il prodotto è molto innovativo. È un prodotto che rappresenta una svolta ed è, allo stesso tempo, all'avanguardia rispetto alla concorrenza.",
+        output: "Il prodotto è innovativo e supera nettamente la concorrenza."
+    }
+];
+
 // Funzione base per armonizzazione
 const armonizzazioneBase = (keepNewlines, source, toneofvoice) => {
-    const formattedSource = formattaSource(keepNewlines, source);
-
     return creaTask({
-        objective: `Armonizza il seguente testo eliminando ripetizioni semantiche e rendendolo più scorrevole, senza alterarne il significato: ${formattedSource}`,
+        objective: `Armonizza il testo racchiuso nel tag <source>: elimina le ripetizioni semantiche e rendilo più scorrevole, senza alterarne il significato.`,
+
+        source: formattaSource(keepNewlines, source),
 
         output: `Testo armonizzato (nient’altro)`,
 
@@ -36,6 +43,8 @@ const armonizzazioneBase = (keepNewlines, source, toneofvoice) => {
         ],
 
         warnings: WARNINGS_BASE,
+
+        examples: EXAMPLES,
 
         context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.\n\n**Lessico vietato (case-insensitive):** ${LESSICO_VIETATO}`
     });

@@ -48,20 +48,37 @@ export class PromptService {
     }
 
     /**
-     * Formatta il risultato del prompt
+     * Serializza il task in un prompt a tag XML: è la struttura che i
+     * modelli attuali seguono in modo più affidabile su prompt complessi,
+     * perché separa nettamente i dati (il testo dell'utente, potenzialmente
+     * non fidato) dalle istruzioni, invece di concatenarli come testo
+     * libero. Ordine: il materiale sorgente per primo (i documenti lunghi
+     * vanno letti prima della richiesta), le istruzioni operative alla
+     * fine, così il modello le legge per ultime, subito prima di rispondere.
      */
     formatPromptResult(task) {
         if (!task) return "Nessun task fornito.";
 
-        const parts = [];
+        const section = (tag, content) => content ? `<${tag}>\n${content}\n</${tag}>` : null;
+        const list = (items) => items.map(item => `- ${item}`).join("\n");
 
-        if (task.objective) parts.push(task.objective);
-        if (task.output) parts.push(`Formato output richiesto:\n${task.output}`);
-        if (Array.isArray(task.constraints) && task.constraints.length > 0)
-            parts.push(`Vincoli:\n- ${task.constraints.join("\n- ")}`);
-        if (Array.isArray(task.warnings) && task.warnings.length > 0)
-            parts.push(`Avvertenze:\n- ${task.warnings.join("\n- ")}`);
-        if (task.context) parts.push(`Contesto:\n${task.context}`);
+        const examplesBlock = Array.isArray(task.examples) && task.examples.length > 0
+            ? task.examples.map(ex =>
+                `<example>\n<input>\n${ex.input}\n</input>\n<output>\n${ex.output}\n</output>\n</example>`
+            ).join("\n")
+            : null;
+
+        const parts = [
+            section("source", task.source),
+            section("task", task.objective),
+            section("context", task.context),
+            section("examples", examplesBlock),
+            Array.isArray(task.constraints) && task.constraints.length > 0
+                ? section("constraints", list(task.constraints)) : null,
+            Array.isArray(task.warnings) && task.warnings.length > 0
+                ? section("warnings", list(task.warnings)) : null,
+            section("output_format", task.output)
+        ].filter(Boolean);
 
         return parts.length > 0 ? parts.join("\n\n") : "Nessun dato disponibile per questo task.";
     }
