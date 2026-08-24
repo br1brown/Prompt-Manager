@@ -49,10 +49,14 @@ const CRITERI_BASE = [
  */
 function costruisciCriteri(escludiCriteri = [], criteriExtra = []) {
     const ticAttivi = TIC_AI.filter(t => !escludiCriteri.includes(t.id));
+    // Sotto-elenco vero, non una riga con i pattern separati da
+    // punto e virgola: più lungo, ma il modello lo scansiona invece di
+    // doverlo analizzare come prosa compressa. Il "perché" resta unico,
+    // in testa, non ripetuto per ogni voce.
     const criterioTic = ticAttivi.length > 0 ? [{
         livello: "stile",
-        regola: `Non introdurre, se assenti nell'originale: ${ticAttivi.map(t => t.testo).join("; ")}`,
-        perche: "sono i tic più riconoscibili della scrittura AI, rari nel parlato o scritto umano naturale: introdurli è il modo più rapido per tradire un testo generato"
+        regola: `Non introdurre questi pattern, se assenti nell'originale (perché: sono i tic più riconoscibili della scrittura AI, rari nel parlato o scritto umano naturale: introdurli è il modo più rapido per tradire un testo generato):\n`
+            + ticAttivi.map(t => `  - ${t.testo}`).join("\n")
     }] : [];
 
     return [
