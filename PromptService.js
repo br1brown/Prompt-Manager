@@ -55,21 +55,29 @@ export class PromptService {
      * libero. Ordine: il materiale sorgente per primo (i documenti lunghi
      * vanno letti prima della richiesta), le istruzioni operative alla
      * fine, così il modello le legge per ultime, subito prima di rispondere.
-     * La verifica finale è generata qui, non nei singoli prompt: è un
-     * passaggio trasversale a ogni task che ha regole da rispettare, non
-     * una regola specifica di un task.
+     *
+     * Il tag è derivato dal nome del campo (camelCase -> snake_case): non
+     * c'è una mappa parallela nome-campo -> nome-tag da tenere allineata a
+     * mano, quindi rinominare o aggiungere un campo in creaTask basta da
+     * solo a farlo comparire nel prompt con il tag giusto.
      */
     formatPromptResult(task) {
         if (!task) return "Nessun task fornito.";
 
-        const section = (tag, content) => content ? `<${tag}>\n${content}\n</${tag}>` : null;
-        const list = (items) => items.map(item => `- ${item}`).join("\n");
-        const hasRules = (task.constraints?.length > 0) || (task.warnings?.length > 0);
+        const toTag = (field) => field.replace(/([A-Z])/g, "_$1").toLowerCase();
+        const section = (field, content) => content ? `<${toTag(field)}>\n${content}\n</${toTag(field)}>` : null;
 
-        const examplesBlock = Array.isArray(task.examples) && task.examples.length > 0
+        const examplesBlock = task.examples?.length > 0
             ? task.examples.map(ex =>
                 `<example>\n<input>\n${ex.input}\n</input>\n<output>\n${ex.output}\n</output>\n</example>`
             ).join("\n")
+            : null;
+
+        // Ogni criterio è una condizione di successo verificabile; il
+        // "perché" compare solo dove è stato scritto, non è un campo
+        // obbligatorio (evita di spiegare l'ovvio a ogni riga)
+        const criteriBlock = task.criteri?.length > 0
+            ? task.criteri.map(c => c.perche ? `- ${c.regola} (perché: ${c.perche})` : `- ${c.regola}`).join("\n")
             : null;
 
         const parts = [
@@ -77,11 +85,11 @@ export class PromptService {
             section("task", task.task),
             section("voice", task.voice),
             section("context", task.context),
+            section("metodo", task.metodo),
             section("examples", examplesBlock),
-            task.constraints?.length > 0 ? section("constraints", list(task.constraints)) : null,
-            task.warnings?.length > 0 ? section("warnings", list(task.warnings)) : null,
-            hasRules ? section("final_check", "Prima di rispondere, ricontrolla il risultato rispetto a tutti i vincoli e le avvertenze sopra: correggi in silenzio ogni violazione, senza commentarla.") : null,
-            section("output_format", task.outputFormat)
+            section("criteri", criteriBlock),
+            criteriBlock ? section("verificaFinale", "Prima di rispondere, ripassa il risultato contro ogni voce di <criteri> e correggi in silenzio ogni scostamento, senza commentarlo.") : null,
+            section("outputFormat", task.outputFormat)
         ].filter(Boolean);
 
         return parts.length > 0 ? parts.join("\n\n") : "Nessun dato disponibile per questo task.";

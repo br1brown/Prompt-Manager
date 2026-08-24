@@ -2,29 +2,30 @@ import { formattaSource, creaTask } from '../promptFactory.js';
 import { PATTERN_SCRITTURA_AI } from '../data/patternScritturaAI.js';
 import { toneProfiles } from '../data/toneProfiles.js';
 
-// Vincoli comuni a tutte le armonizzazioni (indipendenti dal tono)
-const CONSTRAINTS_BASE = [
-    "Conserva riferimenti ed esempi se presenti",
-    "Mantieni il significato originale",
-    "Ottimizzare solo la struttura senza alterare il messaggio",
-    "Nessun trattino (—, --, –) usato come inciso",
-    "Non sostituire 'è/sono' con perifrasi come 'rappresenta', 'si configura come', 'funge da' quando l'originale usa la forma semplice"
+// Tic e pattern da evitare, se assenti nell'originale. Sono elencati tutti
+// insieme perché condividono un'unica motivazione (vedi CRITERI_BASE):
+// spiegare il "perché" una volta sola, non ripeterlo riga per riga.
+const TIC_AI = [
+    "trattino (—, --, –) usato come inciso",
+    "perifrasi come 'rappresenta', 'si configura come', 'funge da' al posto di un semplice 'è/sono' quando l'originale usa la forma semplice",
+    "struttura 'non solo… ma anche…'",
+    "attribuzioni vaghe (es. 'gli esperti sostengono', 'si osserva che') assenti nella fonte",
+    "triadi retoriche (liste di tre elementi) assenti nel testo originale",
+    "chiusure generiche tipo 'nonostante le sfide, il futuro è promettente'",
+    "frasi gerundive di commento vuoto (es. 'sottolineando/evidenziando l'importanza di...') assenti nell'originale",
+    ...PATTERN_SCRITTURA_AI.map(p => `${p.categoria} (es. ${p.esempi})`)
 ];
 
-// Pattern da evitare, descritti per categoria (mantienili solo se già
-// presenti nel testo originale: qui si vieta solo l'introduzione ex novo)
-const evitaPatternAI = PATTERN_SCRITTURA_AI
-    .map(p => `${p.categoria} (es. ${p.esempi})`)
-    .join("; ");
-
-const WARNINGS_BASE = [
-    "Usa solo paragrafi; al loro interno niente grassetti, corsivi o elenchi",
-    `Evita questi pattern tipici della scrittura AI, a meno che non siano già nel testo originale: ${evitaPatternAI}`,
-    "Non introdurre strutture tipo 'non solo… ma anche…' se non già presenti nel testo",
-    "Non introdurre attribuzioni vaghe (es. 'gli esperti sostengono', 'si osserva che') se non presenti nella fonte",
-    "Non aggiungere triadi retoriche (liste di tre elementi) assenti nel testo originale",
-    "Non chiudere con formule generiche tipo 'nonostante le sfide, il futuro è promettente'",
-    "Non aggiungere frasi gerundive di commento vuoto (es. 'sottolineando/evidenziando l'importanza di...') assenti nell'originale"
+// Criteri di successo comuni a tutte le armonizzazioni, indipendenti dal tono
+const CRITERI_BASE = [
+    { regola: "Conserva riferimenti ed esempi se presenti" },
+    { regola: "Mantieni il significato originale" },
+    { regola: "Ottimizza solo la struttura, mai il messaggio" },
+    { regola: "Usa solo paragrafi continui: niente grassetti, corsivi o elenchi puntati" },
+    {
+        regola: `Non introdurre, se assenti nell'originale: ${TIC_AI.join("; ")}`,
+        perche: "sono i tic più riconoscibili della scrittura AI, rari nel parlato o scritto umano naturale: introdurli è il modo più rapido per tradire un testo generato"
+    }
 ];
 
 const EXAMPLES = [
@@ -35,25 +36,21 @@ const EXAMPLES = [
 ];
 
 // Funzione base per armonizzazione
-const armonizzazioneBase = (keepNewlines, source, toneofvoice) => {
-    return creaTask({
-        task: `Armonizza il testo racchiuso nel tag <source>: elimina le ripetizioni semantiche e rendilo più scorrevole, senza alterarne il significato.`,
+const armonizzazioneBase = (keepNewlines, source, toneofvoice) => creaTask({
+    task: `Armonizza il testo racchiuso nel tag <source>: elimina le ripetizioni semantiche e rendilo più scorrevole, senza alterarne il significato.`,
 
-        source: formattaSource(keepNewlines, source),
+    source: formattaSource(keepNewlines, source),
 
-        voice: toneofvoice,
+    voice: toneofvoice,
 
-        outputFormat: `Testo armonizzato (nient’altro)`,
+    context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.`,
 
-        constraints: CONSTRAINTS_BASE,
+    examples: EXAMPLES,
 
-        warnings: WARNINGS_BASE,
+    criteri: CRITERI_BASE,
 
-        examples: EXAMPLES,
-
-        context: `Il testo deve risultare fluido, coerente e leggibile, senza perdita di informazioni specifiche.`
-    });
-};
+    outputFormat: `Testo armonizzato (nient'altro)`
+});
 
 /**
  * Genera dinamicamente i bottoni di armonizzazione dai toneProfiles
