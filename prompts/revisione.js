@@ -4,45 +4,74 @@ export const revisione = [
     {
         label: "Correzione Sottotitoli",
         func: (keepNewlines, source) => creaTask({
-            objective: `Correggi esclusivamente gli errori grammaticali dovuti a trascrizioni errate e i problemi di punteggiatura nel seguente testo: ${formattaSource(keepNewlines, source)}`,
+            task: `Correggi esclusivamente gli errori grammaticali dovuti a trascrizioni errate e i problemi di punteggiatura nel testo racchiuso nel tag <source>.`,
 
-            constraints: [
-                "Il testo deve rimanere fedele all'originale",
-                "Non cambiare lo stile, il tono o la struttura delle frasi",
-                "Non riscrivere il testo: intervieni solo in presenza di errori evidenti",
-                "Non modificare i riferimenti temporali (se presenti)",
-                "Ottimizza solo la punteggiatura per migliorare la comprensione, senza alterare il contenuto"
+            source: formattaSource(keepNewlines, source),
+
+            context: `Revisione minimale di sottotitoli autogenerati da un video: le modifiche vanno ridotte al minimo indispensabile, preservando stile e significato originali per una lettura fluida e fedele.`,
+
+            examples: [
+                {
+                    input: "quindi oggi vi parlo di un argomento che mi sta molto a cuore che è quello dell intelligenza artificiale",
+                    output: "Quindi oggi vi parlo di un argomento che mi sta molto a cuore, che è quello dell'intelligenza artificiale."
+                },
+                {
+                    input: "poi abbiamo fatto due prove la prima e andata bene la seconda un po meno",
+                    output: "Poi abbiamo fatto due prove: la prima è andata bene, la seconda un po' meno."
+                }
             ],
 
-            warnings: [
-                "Cerca di accorpare parole singole per migliorare la leggibilità"
+            criteri: [
+                { regola: "Resta fedele all'originale: stile, tono e struttura delle frasi non cambiano" },
+                { regola: "Interveni solo in presenza di errori evidenti", perche: "è una correzione minima, non una riscrittura" },
+                { regola: "Non modificare i riferimenti temporali, se presenti" },
+                { regola: "Correggi la punteggiatura solo per migliorare la comprensione, senza alterare il contenuto" },
+                { regola: "Accorpa le parole spezzate dalla trascrizione automatica quando migliora la leggibilità" }
             ],
 
-            context: `Revisione minimale dei sottotitoli autogenerati da un video, focalizzandosi esclusivamente sulla correzione di errori grammaticali e punteggiatura. Le modifiche devono essere ridotte al minimo indispensabile, preservando completamente lo stile e il significato originale per garantire una lettura fluida e fedele.`
+            outputFormat: `Testo corretto (nient'altro)`
         })
     },
     {
         label: "Controllo Accuratezza",
         func: (keepNewlines, source) => creaTask({
-            objective: `Verifica tramite internet l'accuratezza delle informazioni nel seguente testo: ${formattaSource(keepNewlines, source)}\nMostra solo gli errori e le inesattezze da correggere solo supportate da fonti affidabili`,
+            task: `Verifica tramite internet l'accuratezza delle informazioni nel testo racchiuso nel tag <source>. Segnala solo gli errori e le inesattezze, supportati da fonti affidabili.`,
 
-            output: `---
-Testo originale
-[Spiegazione dell'errore], Fonti
-Testo corretto proposto
----`,
+            source: formattaSource(keepNewlines, source),
 
-            constraints: [
-                "Verifica solo fatti oggettivi",
-                "Usa fonti autorevoli e fornisci link",
-                "Ignora le informazioni corrette"
+            context: `Analisi e correzione di eventuali errori fattuali, per garantire informazioni accurate senza alterare il significato originale.`,
+
+            metodo: `Per ciascuna affermazione verificabile nel testo, valutala singolarmente: individuala, verificala con fonti autorevoli, poi decidi se merita una segnalazione. Non mostrare questo processo nella risposta finale: nella risposta compaiono solo i blocchi <correzione>, o l'esito "nessun errore riscontrato".`,
+
+            examples: [
+                {
+                    input: "La Torre Eiffel è stata completata nel 1900.",
+                    output: `<correzione>
+<testo_originale>La Torre Eiffel è stata completata nel 1900.</testo_originale>
+<errore>La Torre Eiffel è stata completata nel 1889, non nel 1900.</errore>
+<fonti>https://www.toureiffel.paris/en/the-monument/history (sito ufficiale della Tour Eiffel)</fonti>
+<testo_corretto>La Torre Eiffel è stata completata nel 1889.</testo_corretto>
+</correzione>`
+                }
             ],
 
-            warnings: [
-                "Mantieni neutralità nelle correzioni"
+            criteri: [
+                { regola: "Verifica solo fatti oggettivi, non opinioni" },
+                { regola: "Usa fonti autorevoli e cita sempre il link" },
+                { regola: "Ignora le informazioni già corrette: segnala solo gli errori" },
+                { regola: "Mantieni un tono neutro nelle correzioni proposte" }
             ],
 
-            context: `Analisi e correzione di eventuali errori fattuali. L'obiettivo è garantire informazioni accurate, fornendo riferimenti affidabili senza alterare il significato originale.`
+            outputFormat: `Restituisci un blocco <correzione> per ogni errore trovato, in questo schema:
+
+<correzione>
+<testo_originale>frase esatta tratta dal source</testo_originale>
+<errore>spiegazione dell'inesattezza</errore>
+<fonti>link alle fonti usate per la verifica</fonti>
+<testo_corretto>proposta di correzione</testo_corretto>
+</correzione>
+
+Se non trovi errori, rispondi solo con: nessun errore riscontrato.`
         })
     }
 ];

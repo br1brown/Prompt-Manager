@@ -5,6 +5,11 @@ import { linkAI } from './data/linkAI.js';
  * Classe per la gestione degli eventi dell'interfaccia
  */
 export class EventManager {
+    // Limite pratico e universale di lunghezza URL (browser, proxy, server
+    // intermedi): oltre questa soglia la prevalorizzazione via query
+    // string diventa inaffidabile, meglio ripiegare sul link semplice
+    static MAX_PREFILL_URL_LENGTH = 2000;
+
     constructor(promptService, modalManager) {
         this.promptService = promptService;
         this.modalManager = modalManager;
@@ -123,10 +128,20 @@ export class EventManager {
                 showCancelButton: false,
                 showConfirmButton: false,
                 html: orderedLinks.map(link => {
-                    // Se siamo su mobile e c'è un URL app, usa quello, altrimenti usa il web
-                    const url = (isMobile && link.app) ? link.app : link.url;
-                    // Se non c'è app su mobile e link.app è esplicitamente null, salta questo link
-                    if (isMobile && link.app === null) return '';
+                    // Se siamo su mobile e c'è un deep link app, usa quello; altrimenti
+                    // il sito web va comunque bene anche da mobile, quindi nessun
+                    // servizio senza deep link va nascosto dalla lista
+                    let url = (isMobile && link.app) ? link.app : link.url;
+
+                    // Se il servizio supporta la prevalorizzazione via URL, apriamolo
+                    // già con il prompt dentro (il testo resta comunque negli appunti
+                    // come rete di sicurezza). Oltre una certa lunghezza l'URL non è
+                    // più affidabile in tutti i browser/proxy intermedi: in quel caso
+                    // si ripiega sul link semplice, e l'utente incolla a mano
+                    if (!(isMobile && link.app) && link.prefillUrl) {
+                        const prefilled = link.prefillUrl.replace('{q}', encodeURIComponent(text));
+                        if (prefilled.length <= EventManager.MAX_PREFILL_URL_LENGTH) url = prefilled;
+                    }
 
                     const isLastUsed = link.nome === lastUsedAI;
                     const style = isLastUsed ? 'btn-primary' : 'btn-dark';

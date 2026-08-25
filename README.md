@@ -6,6 +6,9 @@ Prova subito l'applicazione: **[Prompt Manager Live](https://br1brown.github.io/
 
 ## 🚀 Caratteristiche
 - **Generazione automatica di prompt** ottimizzati per diversi tipi di contenuto
+- **Output a tag XML** (`<source>`, `<task>`, `<voice>`, `<metodo>`, `<criteri>`, `<examples>`, `<verifica_finale>`...), lo standard 2026 per prompt strutturati: separa nettamente il testo dell'utente dalle istruzioni, chiude con un'auto-verifica prima del formato di risposta, ed è seguito in modo più affidabile dai modelli attuali
+- **Criteri di successo motivati** al posto di elenchi di regole imperative: ogni condizione può portare il "perché", cosa che aiuta i modelli attuali a generalizzare invece di applicarla alla lettera fuori contesto
+- **Pattern di scrittura AI da evitare per categoria**, non una lista fissa di parole vietate: generalizza meglio e non invecchia a ogni nuova moda lessicale
 - **Interfaccia responsive** compatibile con dispositivi desktop e mobile
 - **Modalità di tono personalizzabile** con profili predefiniti e toni personalizzati
 - **Supporto per social media** con template specifici per piattaforme
@@ -37,8 +40,8 @@ prompt-manager/
 ├── prompts/                 # Definizione dei vari prompt, per categoria
 │   ├── armonizzazione.js
 │   └── revisione.js
-├── data/                    # Dati puri (lessico vietato, profili tono, link AI)
-│   ├── lessico.js
+├── data/                    # Dati puri (pattern di scrittura AI da evitare, profili tono, link AI)
+│   ├── patternScritturaAI.js
 │   ├── toneProfiles.js
 │   └── linkAI.js
 └── icon.svg               # Icona dell'applicazione
