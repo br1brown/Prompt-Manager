@@ -12,7 +12,7 @@ export const PATTERN_SCRITTURA_AI = [
     },
     {
         categoria: "vocabolario da hype tecnologico",
-        esempi: "rivoluzionario, dirompente, innovativo, all'avanguardia, sbloccare, tuffarsi, navigare, cruciale, intricato, entusiasmante"
+        esempi: "rivoluzionario, dirompente, innovativo, all'avanguardia, sbloccare, tuffarsi, navigare, cruciale, intricato, entusiasmante, robusto"
     },
     {
         categoria: "enfasi indebita su importanza o eredità storica",
@@ -20,7 +20,7 @@ export const PATTERN_SCRITTURA_AI = [
     },
     {
         categoria: "tono promozionale da guida turistica",
-        esempi: "vivace, ricco patrimonio, vanta, eccellenza, rinomato, impegno verso"
+        esempi: "vivace, ricco patrimonio, vanta, eccellenza, rinomato, impegno verso, meticoloso, vetrina"
     },
     {
         categoria: "connettori vaghi al posto di preposizioni dirette",

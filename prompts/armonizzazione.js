@@ -8,12 +8,12 @@ import { toneProfiles } from '../data/toneProfiles.js';
 // lista: vedi ECCEZIONI_TONO più sotto.
 const TIC_AI = [
     { id: "em-dash", testo: "trattino (—, --, –) usato come inciso" },
-    { id: "perifrasi-essere", testo: "perifrasi come 'rappresenta', 'si configura come', 'funge da' al posto di un semplice 'è/sono' quando l'originale usa la forma semplice" },
+    { id: "perifrasi-essere", testo: "perifrasi come 'rappresenta', 'si configura come', 'funge da', 'vanta', 'offre', 'mantiene' al posto di un semplice 'è/sono' o 'ha' quando l'originale usa la forma semplice" },
     { id: "non-solo-ma-anche", testo: "struttura 'non solo… ma anche…'" },
     { id: "attribuzioni-vaghe", testo: "attribuzioni vaghe (es. 'gli esperti sostengono', 'si osserva che') assenti nella fonte" },
     { id: "triadi-retoriche", testo: "triadi retoriche (liste di tre elementi) assenti nel testo originale" },
     { id: "chiusure-generiche", testo: "chiusure generiche tipo 'nonostante le sfide, il futuro è promettente'" },
-    { id: "gerundi-vuoti", testo: "frasi gerundive di commento vuoto (es. 'sottolineando/evidenziando l'importanza di...') assenti nell'originale" },
+    { id: "gerundi-vuoti", testo: "commenti vuoti, gerundivi o diretti (es. 'sottolineando/evidenziando l'importanza di...', 'questo sottolinea/evidenzia che...') assenti nell'originale" },
     ...PATTERN_SCRITTURA_AI.map(p => ({ id: `pattern-${p.categoria.split(" ")[0]}`, testo: `${p.categoria} (es. ${p.esempi})` }))
 ];
 
@@ -31,6 +31,12 @@ const CRITERI_BASE = [
     { id: "mantieni-significato", livello: "fedelta", regola: "Mantieni il significato originale" },
     { id: "solo-struttura", livello: "fedelta", regola: "Ottimizza solo la struttura, mai il messaggio" },
     { id: "solo-paragrafi", livello: "fedelta", regola: "Usa solo paragrafi continui: niente grassetti, corsivi o elenchi puntati" },
+    {
+        id: "residui-markup-ai",
+        livello: "fedelta",
+        regola: "Se nel source sono presenti residui di markup lasciati da altri assistenti AI (es. 'oaicite', '[cite: 1]', 'grok_card', parentesi lenticolari da citazioni), rimuovili",
+        perche: "sono artefatti tecnici di un'interfaccia chat copiati per errore insieme al testo, non contenuto: rimuoverli non altera il messaggio"
+    },
     {
         id: "ritmo-frasi",
         livello: "stile",
