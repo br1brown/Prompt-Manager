@@ -1,3 +1,5 @@
+import { showToast } from './Toast.js';
+
 const STORAGE_KEY = 'memeModeEnabled';
 const PARTICLES = ['✨', '🌟', '💫', '🚀', '🤖', '💜', '🔮', '⚡'];
 const PARTICLE_COUNT = 18;
@@ -202,18 +204,12 @@ export function initMemeMode() {
 
         if (announce) {
             if (enabled) burstConfetti();
-            if (window.Swal) {
-                window.Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 2200,
-                    timerProgressBar: true,
-                    title: enabled
-                        ? '🚀 Prompt Power Attivato ✨'
-                        : 'Modalità sobria per i tuoi prompt 😴'
-                });
-            }
+            showToast({
+                title: enabled
+                    ? '🚀 Prompt Power Attivato ✨'
+                    : 'Modalità sobria per i tuoi prompt 😴',
+                icon: 'success'
+            });
         }
     };
 

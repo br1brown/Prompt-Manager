@@ -1,6 +1,6 @@
 // Service worker: rende l'app installabile e utilizzabile offline.
 // Bump questa costante ad ogni deploy per invalidare la cache precedente.
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `prompt-manager-${CACHE_VERSION}`;
 
 // Solo asset same-origin: le risorse CDN vengono gestite a runtime
@@ -12,6 +12,7 @@ const APP_SHELL = [
     './main.js',
     './EventManager.js',
     './ModalManager.js',
+    './Toast.js',
     './PromptGenerator.js',
     './PromptService.js',
     './UIRenderer.js',

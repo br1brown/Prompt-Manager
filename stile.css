@@ -60,10 +60,10 @@
         --result-bg: #1f2937;
     }
     
-    .swal2-popup {
+    .modal-content {
         background-color: #374151 !important;
     }
-    
+
     .profile-card {
         background-color: #4b5563 !important;
         border-color: #6b7280 !important;
@@ -521,64 +521,64 @@ textarea {
     background: var(--text-secondary);
 }
 
-/* SweetAlert2 customization */
-.swal2-popup {
-    font-size: 1rem !important;
-    border-radius: var(--radius-lg) !important;
-    background-color: var(--card-bg) !important;
-    color: var(--text-primary) !important;
+/* Modali Bootstrap (selezione tono, link AI) */
+.modal-content {
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--card-bg);
+    color: var(--text-primary);
 }
 
-.swal2-title {
+.modal-title {
     color: var(--text-primary) !important;
     font-weight: 700 !important;
 }
 
-.swal2-html-container {
+.modal-body {
     color: var(--text-primary) !important;
 }
 
 /* Stili per le card dei profili nella modale */
-.swal2-popup .card-title {
+.modal-content .card-title {
     color: var(--text-primary) !important;
     font-weight: 600 !important;
 }
 
-.swal2-popup .card-text {
+.modal-content .card-text {
     color: var(--text-secondary) !important;
 }
 
-.swal2-popup .text-muted {
+.modal-content .text-muted {
     color: var(--text-secondary) !important;
 }
 
-.swal2-popup h6 {
+.modal-content h6 {
     color: var(--text-primary) !important;
 }
 
 /* Input nella modale */
-.swal2-popup input {
+.modal-content input {
     background-color: var(--card-bg) !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--border-color) !important;
 }
 
-.swal2-popup input:focus {
+.modal-content input:focus {
     border-color: var(--primary-color) !important;
     box-shadow: 0 0 0 3px rgba(42, 81, 208, 0.1) !important;
 }
 
 /* Bottoni nella modale */
-.swal2-popup .btn {
+.modal-content .btn {
     color: white !important;
 }
 
-.swal2-popup .btn-warning {
+.modal-content .btn-warning {
     background-color: #f59e0b !important;
     border-color: #f59e0b !important;
 }
 
-.swal2-popup .btn-warning:hover {
+.modal-content .btn-warning:hover {
     background-color: #d97706 !important;
 }
 
@@ -665,9 +665,9 @@ textarea {
         font-size: 0.9rem !important;
     }
 
-    .swal2-popup {
+    .modal-dialog {
         width: 95% !important;
-        padding: 1rem !important;
+        margin: 0.5rem auto !important;
     }
     
     #back-to-top {
@@ -1281,15 +1281,15 @@ body.meme-mode .result-header {
     background-color: transparent !important;
 }
 
-/* --- Modali SweetAlert2 e card profilo: stesso trattamento glam --- */
-body.meme-mode .swal2-popup {
+/* --- Modali Bootstrap e card profilo: stesso trattamento glam --- */
+body.meme-mode .modal-content {
     background: rgba(255, 255, 255, .85) !important;
     backdrop-filter: blur(16px);
     border-radius: 24px !important;
     box-shadow: 0 0 60px rgba(255, 110, 196, .4);
 }
 
-body.meme-mode .swal2-title {
+body.meme-mode .modal-title {
     font-family: 'Baloo 2', cursive;
     background: linear-gradient(90deg, #ff6ec4, #7873f5, #38bdf8);
     -webkit-background-clip: text;

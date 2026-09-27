@@ -1,4 +1,5 @@
 import { toneProfiles } from './data/toneProfiles.js';
+import { showToast } from './Toast.js';
 
 /**
  * Classe per la gestione delle modali
@@ -13,26 +14,34 @@ export class ModalManager {
      * Mostra la modal per la selezione del tono
      */
     showToneModal(button, callback) {
-        Swal.fire({
-            title: 'Seleziona il tono di voce',
-            html: this.buildToneModalHtml(this.getRecentTones()),
-            width: 700,
-            showCancelButton: true,
-            confirmButtonText: 'Genera Prompt',
-            cancelButtonText: 'Annulla',
-            customClass: {
-                confirmButton: 'btn btn-primary',
-                cancelButton: 'btn btn-secondary ms-2'
-            },
-            didOpen: () => this.setupToneModalEvents(),
-            preConfirm: () => $('#customTone').val().trim() || 'invariato'
-        }).then(result => {
-            if (result.isConfirmed) {
-                this.promptService.setSelectedTone(result.value);
-                this.saveToneUsage(result.value);
-                callback();
-            }
+        const $modal = $('#toneModal');
+        $modal.find('.modal-body').html(this.buildToneModalHtml(this.getRecentTones()));
+        this.setupToneModalEvents();
+
+        // Rimuove l'handler di un'apertura precedente prima di ricollegarlo,
+        // altrimenti ogni "Genera Prompt" richiamerebbe anche i callback vecchi
+        $('#toneModalConfirm').off('click').on('click', () => {
+            const tone = $('#customTone').val().trim() || 'invariato';
+            bootstrap.Modal.getInstance($modal[0]).hide();
+            this.promptService.setSelectedTone(tone);
+            this.saveToneUsage(tone);
+            callback();
         });
+
+        bootstrap.Modal.getOrCreateInstance($modal[0]).show();
+    }
+
+    /**
+     * Mostra la modal con i link rapidi verso i servizi AI dopo la copia
+     */
+    showAiLinksModal(html) {
+        const $modal = $('#aiLinksModal');
+        $modal.find('.modal-body').html(html);
+        $modal.find('.ai-link').on('click', function () {
+            localStorage.setItem('lastUsedAI', $(this).data('nome'));
+        });
+
+        bootstrap.Modal.getOrCreateInstance($modal[0]).show();
     }
 
     /**
@@ -69,7 +78,7 @@ export class ModalManager {
             </div>`;
 
         return `
-            <div class="modal-body container-fluid">
+            <div class="container-fluid">
                 <div class="mb-4">
                     <label for="customTone" class="form-label">
                         <i class="fas fa-edit me-2"></i>Tono di voce personalizzato
@@ -138,13 +147,9 @@ export class ModalManager {
     }
 
     /**
-     * Mostra modal di errore
+     * Mostra una notifica di errore
      */
     showError(title, text) {
-        Swal.fire({
-            icon: "error",
-            title: title,
-            text: text
-        });
+        showToast({ title, text, icon: 'error' });
     }
 }

@@ -46,6 +46,9 @@ export class EventManager {
      */
     bindCopyEvents() {
         $('#copia').on('click', () => this.copyToClipboard());
+        // Il tasto Condividi si vede solo dove il browser sa aprire il
+        // pannello di condivisione nativo (desktop e mobile moderni)
+        $('#condividi').toggle(!!navigator.share).on('click', () => this.shareText());
         $('#Risultato').on('click', function () { $(this).select(); });
     }
 
@@ -121,43 +124,60 @@ export class EventManager {
                 return 0;
             });
 
-            Swal.fire({
-                title: "Testo copiato!",
-                icon: "success",
-                showCloseButton: false,
-                showCancelButton: false,
-                showConfirmButton: false,
-                html: orderedLinks.map(link => {
-                    // Se siamo su mobile e c'è un deep link app, usa quello; altrimenti
-                    // il sito web va comunque bene anche da mobile, quindi nessun
-                    // servizio senza deep link va nascosto dalla lista
-                    let url = (isMobile && link.app) ? link.app : link.url;
+            const html = orderedLinks.map(link => {
+                // Se siamo su mobile e c'è un deep link app, usa quello; altrimenti
+                // il sito web va comunque bene anche da mobile, quindi nessun
+                // servizio senza deep link va nascosto dalla lista
+                let url = (isMobile && link.app) ? link.app : link.url;
 
-                    // Se il servizio supporta la prevalorizzazione via URL, apriamolo
-                    // già con il prompt dentro (il testo resta comunque negli appunti
-                    // come rete di sicurezza). Oltre una certa lunghezza l'URL non è
-                    // più affidabile in tutti i browser/proxy intermedi: in quel caso
-                    // si ripiega sul link semplice, e l'utente incolla a mano
-                    if (!(isMobile && link.app) && link.prefillUrl) {
-                        const prefilled = link.prefillUrl.replace('{q}', encodeURIComponent(text));
-                        if (prefilled.length <= EventManager.MAX_PREFILL_URL_LENGTH) url = prefilled;
-                    }
-
-                    const isLastUsed = link.nome === lastUsedAI;
-                    const style = isLastUsed ? 'btn-primary' : 'btn-dark';
-                    const star = isLastUsed ? '<i class="fas fa-star me-1" aria-hidden="true"></i>' : '';
-
-                    return `<a href="${url}" target="_blank" class="m-1 btn btn-sm ${style} ai-link" data-nome="${link.nome}">${star}${link.nome}</a>`;
-                }).filter(Boolean).join(''),
-                didOpen: () => {
-                    $('.ai-link').on('click', function () {
-                        localStorage.setItem('lastUsedAI', $(this).data('nome'));
-                    });
+                // Se il servizio supporta la prevalorizzazione via URL, apriamolo
+                // già con il prompt dentro (il testo resta comunque negli appunti
+                // come rete di sicurezza). Oltre una certa lunghezza l'URL non è
+                // più affidabile in tutti i browser/proxy intermedi: in quel caso
+                // si ripiega sul link semplice, e l'utente incolla a mano
+                if (!(isMobile && link.app) && link.prefillUrl) {
+                    const prefilled = link.prefillUrl.replace('{q}', encodeURIComponent(text));
+                    if (prefilled.length <= EventManager.MAX_PREFILL_URL_LENGTH) url = prefilled;
                 }
-            });
+
+                const isLastUsed = link.nome === lastUsedAI;
+                const style = isLastUsed ? 'btn-primary' : 'btn-dark';
+                const star = isLastUsed ? '<i class="fas fa-star me-1" aria-hidden="true"></i>' : '';
+
+                return `<a href="${url}" target="_blank" class="m-1 btn btn-sm ${style} ai-link" data-nome="${link.nome}">${star}${link.nome}</a>`;
+            }).filter(Boolean).join('');
+
+            this.modalManager.showAiLinksModal(html);
         }).catch(() => {
             this.modalManager.showError("Errore", "Impossibile copiare il testo");
         });
+    }
+
+    /**
+     * Condivide il prompt come file virtuale tramite il pannello di
+     * condivisione nativo del sistema, così qualsiasi app installata (non
+     * solo quelle predeterminate della lista sopra) può riceverlo
+     */
+    async shareText() {
+        const text = $("#Risultato").val().trim();
+        if (!text) {
+            this.modalManager.showError("Oops..", "Il testo è vuoto, non c'è nulla da condividere");
+            return;
+        }
+
+        const file = new File([text], 'prompt.txt', { type: 'text/plain' });
+        const shareData = (navigator.canShare && navigator.canShare({ files: [file] }))
+            ? { files: [file], title: 'Prompt generato' }
+            : { title: 'Prompt generato', text };
+
+        try {
+            await navigator.share(shareData);
+        } catch (error) {
+            // L'utente ha semplicemente chiuso il pannello di condivisione
+            if (error.name !== 'AbortError') {
+                this.modalManager.showError("Errore", "Impossibile condividere il testo");
+            }
+        }
     }
 
     /**
