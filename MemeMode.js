@@ -1,4 +1,4 @@
-import { showToast } from './Toast.js';
+import { showAlert } from './Alert.js';
 
 const STORAGE_KEY = 'memeModeEnabled';
 const PARTICLES = ['✨', '🌟', '💫', '🚀', '🤖', '💜', '🔮', '⚡'];
@@ -204,7 +204,7 @@ export function initMemeMode() {
 
         if (announce) {
             if (enabled) burstConfetti();
-            showToast({
+            showAlert({
                 title: enabled
                     ? '🚀 Prompt Power Attivato ✨'
                     : 'Modalità sobria per i tuoi prompt 😴',

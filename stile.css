@@ -582,21 +582,6 @@ textarea {
     background-color: #d97706 !important;
 }
 
-/* Notifiche (toast): di default Bootstrap le rende semi-trasparenti,
-   lasciando intravedere il contenuto della pagina sotto, quindi qui lo
-   sfondo diventa opaco come le altre superfici dell'interfaccia */
-.toast-container {
-    max-width: calc(100% - 2rem);
-}
-
-.toast {
-    background-color: var(--card-bg);
-    color: var(--text-primary);
-    max-width: min(350px, 100%);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-}
-
 /* Footer */
 .app-footer {
     margin-top: auto;

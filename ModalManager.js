@@ -1,5 +1,5 @@
 import { toneProfiles } from './data/toneProfiles.js';
-import { showToast } from './Toast.js';
+import { showAlert } from './Alert.js';
 
 /**
  * Classe per la gestione delle modali
@@ -150,6 +150,6 @@ export class ModalManager {
      * Mostra una notifica di errore
      */
     showError(title, text) {
-        showToast({ title, text, icon: 'error' });
+        showAlert({ title, text, icon: 'error' });
     }
 }
