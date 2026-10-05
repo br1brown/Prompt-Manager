@@ -340,8 +340,7 @@ textarea {
 .bottone {
     width: 100%;
     justify-content: center;
-    /* min-width: 0 evita che le etichette lunghe (es. "alla 'Occhio al
-       mondo'") forzino la colonna della grid oltre lo spazio disponibile:
+    /* min-width: 0 evita che le etichette lunghe forzino la colonna della grid oltre lo spazio disponibile:
        ora possono andare su due righe invece di uscire dal bottone */
     text-align: center;
     min-width: 0;
