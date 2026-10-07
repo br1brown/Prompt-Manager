@@ -346,6 +346,14 @@ textarea {
     min-width: 0;
 }
 
+/* Su tablet i bottoni vanno due per riga: se sono dispari, l'ultimo
+   resterebbe da solo a metà larghezza, quindi si allarga a tutta la riga */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    #button-container .row > :last-child:nth-child(odd) {
+        width: 100%;
+    }
+}
+
 /* Result section */
 .result-section {
     background-color: var(--card-bg);
