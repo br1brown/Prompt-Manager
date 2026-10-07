@@ -51,9 +51,14 @@ export class UIRenderer {
         // Griglia responsive di Bootstrap: ogni bottone in una .col dentro
         // una .row con row-cols-*, che si occupa da sola di quante colonne
         // stare per riga a seconda della larghezza (niente più CSS grid custom).
-        const buttonRow = $('<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-2"></div>');
+        // Le colonne non superano mai il numero di bottoni della categoria,
+        // così la riga è sempre piena invece di lasciare spazio vuoto a destra
+        // (es. 5 bottoni su 6 colonne, o 2 bottoni su 6 colonne in Revisione).
+        const items = config[this.activeCategory];
+        const cols = (max) => Math.min(items.length, max);
+        const buttonRow = $(`<div class="row row-cols-1 row-cols-sm-${cols(2)} row-cols-md-${cols(3)} row-cols-lg-${cols(6)} g-2"></div>`);
 
-        config[this.activeCategory].forEach((item, index) => {
+        items.forEach((item, index) => {
             const isDefault = item.label === DEFAULT_LABEL;
             // d-flex sulla colonna fa sì che il bottone si estenda per
             // tutta l'altezza della riga (le .col sono già alte uguali
